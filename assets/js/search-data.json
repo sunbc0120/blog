@@ -53,7 +53,7 @@
   
       ,"page1": {
           "title": "About Me",
-          "content": "This website is powered by fastpages 1. . a blogging platform that natively supports Jupyter notebooks in addition to other formats. &#8617; . |",
+          "content": "I have a mixed background from STEM, with a Bachelor degree in Mechanical Engineering from China 🇨🇳, and a PhD on Thermodynamics from NTU, Singapore 🇸🇬. I had also been a research student at Tohoku University, Japan 🇯🇵, and summer school attendee at Wolfram Research, US 🇺🇸. After a 3-year Postdoctoral Fellowship at CSIRO, Australia 🇦🇺 on Computational Nano Physics and Chemistry, I left academia and took roles in the consulting industry, including at McKinsey&amp;Company. . Now I work as Senior Data Scientist at AWS AI/ML Professional Services, leveraging data-driven methodology on the cloud, to deliver strategic business solutions to customers from different industry sectors. So far been leading projects in challenging areas including robotics computer vision, time series forecasting, price optimisation, predictive maintenance, pharmaceutical development, product recommendation system, etc. . I’m especially passionate about computer vision and its edge computing utilisation, as well as developing tools to democratise Data Science for people without a technical background so that they could focus on business value-adding with their own data asset. .",
           "url": "https://sunbc0120.github.io/blog/about/",
           "relUrl": "/about/",
           "date": ""
