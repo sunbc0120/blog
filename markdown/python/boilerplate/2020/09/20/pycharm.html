@@ -163,7 +163,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#summary">Summary</a></li>
 <li class="toc-entry toc-h2"><a href="#next">Next</a></li>
 </ul>
-<p><img src="/images/pycharm/pycharm.png" alt="PyCharm"><a href="https://www.jetbrains.com/pycharm/">https://www.jetbrains.com/pycharm/</a></p>
+<p><img src="/blog/images/pycharm/pycharm.png" alt="PyCharm"><a href="https://www.jetbrains.com/pycharm/">https://www.jetbrains.com/pycharm/</a></p>
 
 <p>I’ve been using PyCharm for 5 years til now, including 2 years of time with its Professional Edition (the rest 3 years were depressing). Here is a summary on how it’s setup for my daily Python development tasks.</p>
 
@@ -193,7 +193,7 @@ window.onload = wrap_img;
 <h3 id="setup">
 <a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h3>
 
-<p>Following these philosophies, a typical end-to-end setup would look like this[^1]:</p>
+<p>Following these philosophies, a typical end-to-end setup would look like this [^1]:</p>
 
 <p><img class="mermaid" src="https://mermaid.ink/svg/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG7wn5eSIEdpdCBSZXBvc2l0b3J577iPLT4-8J-SuyBMb2NhbDogKDEpIFZlcnNpb24gQ29udHJvbFxu8J-SuyBMb2NhbC0-PvCfl5IgR2l0IFJlcG9zaXRvcnnvuI86ICg2KSBWZXJzaW9uIENvbnRyb2xcbvCfkrsgTG9jYWwtPj7imIHvuI8gUmVtb3RlOiAoMikgU291cmNlIENvZGUgU3luY1xu4piB77iPIFJlbW90ZS0-PvCfkrsgTG9jYWw6ICgzKSBKdXB5dGVyIE5vdGVib29rXG5Ob3RlIHJpZ2h0IG9mIPCfkrsgTG9jYWw6IFNGVFAvU1NIIFR1bm5lbFxu4piB77iPIFJlbW90ZS0-PvCfkLMgRG9ja2VyIFJlZ2lzdHJ5OiAoNCkgUHVzaFxu8J-QsyBEb2NrZXIgUmVnaXN0cnktPj7imIHvuI8gUmVtb3RlOiAoNSkgRGVwbG95bWVudFxu8J-XkiBHaXQgUmVwb3NpdG9yee-4jy0-PvCfkLMgRG9ja2VyIFJlZ2lzdHJ5OiAoNykgQ0kvQ0QiLCJtZXJtYWlkIjpudWxsfQ"></p>
 
@@ -227,7 +227,7 @@ window.onload = wrap_img;
 <p>This post will focus on <strong>Step 2</strong>, <strong>3</strong> and <strong>4</strong> setting ups with <em>PyCharm Pro</em>.</p>
 
 <blockquote>
-  <p>[^1]In case you wonder how the above graph is generated in Markdown with <code class="language-plaintext highlighter-rouge">Jekyll</code>:</p>
+  <p>[1] In case you wonder how the above graph is generated in Markdown with <code class="language-plaintext highlighter-rouge">Jekyll</code>:</p>
 
   <div class="language-text highlighter-rouge">
 <div class="highlight"><pre class="highlight"><code>@startmermaid
@@ -325,7 +325,7 @@ sequenceDiagram
 
 <p>There are different ways to choose a Python interpreter in <em>PyCharm Pro</em>, one of which is SSH interpreter, as shown in the image below. Here, you can type in the <code class="language-plaintext highlighter-rouge">Host</code>, <code class="language-plaintext highlighter-rouge">Port</code> and <code class="language-plaintext highlighter-rouge">Username</code>.</p>
 
-<p><img src="/images/pycharm/ssh.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/ssh.png" alt="Remote"></p>
 
 <p>After which you can input credentials information, e.g. <code class="language-plaintext highlighter-rouge">Authentication type</code>, <code class="language-plaintext highlighter-rouge">Private key file</code> and its <code class="language-plaintext highlighter-rouge">Passphrase</code> if applicable.</p>
 
@@ -333,11 +333,11 @@ sequenceDiagram
   <p>You shall explore <code class="language-plaintext highlighter-rouge">Docker</code> and <code class="language-plaintext highlighter-rouge">Docker Compose</code> as well.</p>
 </blockquote>
 
-<p><img src="/images/pycharm/ssh_creditential.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/ssh_creditential.png" alt="Remote"></p>
 
 <p>Finally, we can specify the Python Interpreter path on the remote instance, and also map the current <em>project root</em> to a <em>directory</em> on the remote. Check the box <code class="language-plaintext highlighter-rouge">Automatically upload project files to the server</code>.</p>
 
-<p><img src="/images/pycharm/remote.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/remote.png" alt="Remote"></p>
 
 <h3 id="source-code-file-deployment">
 <a class="anchor" href="#source-code-file-deployment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source Code File Deployment</h3>
@@ -358,64 +358,71 @@ sequenceDiagram
   <li><code class="language-plaintext highlighter-rouge">Upload changed files automatically to the default server: Always</code></li>
 </ol>
 
-<p><img src="/images/pycharm/deployment.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/deployment.png" alt="Remote"></p>
 
 <p>In short, we maintain one source-of-the-truth at local, and have the remote be an exact mirror copy of that.</p>
 
-<p><img src="/images/pycharm/start_SSH_session.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/start_SSH_session.png" alt="Remote"></p>
 
 <p>Under <code class="language-plaintext highlighter-rouge">Tools</code>, select <code class="language-plaintext highlighter-rouge">Start SSH session</code>, then you will open an Terminal to your remote server. Now it’s time to switch on <code class="language-plaintext highlighter-rouge">Tmux</code> and run <code class="language-plaintext highlighter-rouge">pip install -e .</code> in your Python package root directory at remote, and we’ve completed <strong>Step 2</strong>.</p>
 
 <h3 id="jupyter-server-ssh-tunnel-port-forwarding">
 <a class="anchor" href="#jupyter-server-ssh-tunnel-port-forwarding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Jupyter Server: SSH Tunnel Port Forwarding</h3>
 
-<p><img src="/images/pycharm/jupyter.png" alt="Remote"></p>
+<p><img src="/blog/images/pycharm/jupyter.png" alt="Remote"></p>
 
-<p>In the same Terminal to the remote, maybe within <code class="language-plaintext highlighter-rouge">Tmux</code>, start Jupyter server on the remote, e.g. <code class="language-plaintext highlighter-rouge">jupyter notebook --no-browser</code>. You will be returned with Jupyter server url, port number, and maybe its token. However, all of these information right now is relative to the remote instance only – you won’t be able to reach them from local.</p>
+<p>In the same Terminal to the remote, maybe within <code class="language-plaintext highlighter-rouge">Tmux</code>, start Jupyter server on the remote with, e.g. <code class="language-plaintext highlighter-rouge">jupyter notebook --no-browser</code>. You will be returned with Jupyter server url, port number, and maybe its token. However, all of these information right now is relative to the remote instance only – you won’t be able to reach them from local.</p>
 
-<p>Unlike life, in Python most of the time had already been solved by others for us. The solution to the above problem are given:</p>
+<p>Unlike life, in Python most of the problems we run into had already been resolved by those pioneers for us. The solution to the above problem is given:</p>
+
 <ol>
   <li><a href="https://coderwall.com/p/ohk6cg/remote-access-to-ipython-notebooks-via-ssh">Remote Access to IPython Notebooks via SSH</a></li>
   <li><a href="https://queirozf.com/entries/connect-to-jupyter-notebook-running-on-ec2-instance">Connect to Jupyter Notebook Running on EC2 Instance</a></li>
 </ol>
 
 <p>In short, at Terminal to the local, do</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;:localhost:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
 </code></pre></div></div>
 
 <p>Now you shall use your local browser and go to <code class="language-plaintext highlighter-rouge">http://localhost:&lt;local-port-you-just-specified&gt;</code>. If you can create a new Jupyter notebook, select your Python kernel, and run successfully <code class="language-plaintext highlighter-rouge">import &lt;you-python-module-name&gt;</code>, then we’ve completed <strong>Step 3</strong>.</p>
 
-<p>What you can do now typically is, <code class="language-plaintext highlighter-rouge">git checkout</code> to a feature branch at local, experiment with different code in notebooks with local browser, and keeps modularising those code into your source code sit in <code class="language-plaintext highlighter-rouge">PyCharm Pro</code> and get them into good shape using best practises, as described in <strong>Step 4.1</strong>. Finally, do <code class="language-plaintext highlighter-rouge">git push</code> to the code repository periodically.</p>
+<p>What you can do now typically is, <code class="language-plaintext highlighter-rouge">git checkout</code> to a feature branch at local, experiment with different code in notebooks with local browser, and keeps modularising your ideas into source code sitting in <code class="language-plaintext highlighter-rouge">PyCharm Pro</code> and get them into good shape using best practises, as described in <strong>Step 4.1</strong>. Finally, do <code class="language-plaintext highlighter-rouge">git push</code> to the code repository periodically.</p>
 
-<p>However, be aware that all the heavy code executions, data management, network traffics occur at the remote, but reflected in your local browser in notebooks, which can be downloaded as HTML or organised into documentation with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>.</p>
+<p>However, be aware that all the heavy code executions, data management, network traffics occur at the remote, but reflected in your local browser in notebooks, which can be downloaded as HTML or organised into <a href="https://jeanbilheux.pages.ornl.gov/post/convert_notebooks_to_html_pages/">documentation</a> with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>.</p>
 
 <h3 id="docker-build-and-push">
 <a class="anchor" href="#docker-build-and-push" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker BUILD and PUSH</h3>
 
+<p>Docker image Building and Pushing would take a lot of network traffic. Don’t ever try to do, especially <code class="language-plaintext highlighter-rouge">docker push</code> from local. Why? The following image taken while WFH will answer that:</p>
+
+<p><img src="/blog/images/pycharm/network_speed.png" alt="network_speed"></p>
+
+<p>Life is short, just cherish it.</p>
+
 <h2 id="summary">
 <a class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h2>
 
-<p>Nothing is perfect in this world, but I’d like to focus on their strength.</p>
+<p>Nothing is perfect in this world, but I’d like to focus on their strength. Some other features I love about <em>PyCharm Pro</em> is:</p>
+
+<blockquote>
+  <p>Some of them may be available in Community Edition as well.</p>
+</blockquote>
 
 <ul>
-  <li>Auto Fix</li>
-  <li>Auto Completion: Accurate &amp; Fast</li>
-  <li>Navigation Smooth</li>
-  <li>Templates of Frameworks</li>
+  <li>Intelligent Auto Fix: whenever there is an error or warning, put cursor on it and just <code class="language-plaintext highlighter-rouge">⌥</code> + <code class="language-plaintext highlighter-rouge">return</code>.</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">Optmise imports</code>: remove unused import automatically.</li>
+  <li>Auto Completion &amp; Code Snippets: a responsive and smooth experience.</li>
+  <li>lubricating code navigation and go into definition, regardless how large the project is.</li>
+  <li>Comprehensive templates of python frameworks.</li>
+  <li>Good quality plugins.</li>
 </ul>
 
 <h2 id="next">
 <a class="anchor" href="#next" aria-hidden="true"><span class="octicon octicon-link"></span></a>Next</h2>
 
-<p>VSCode Pro</p>
-
-<ul>
-  <li>Extension</li>
-  <li>Remote Dev</li>
-  <li>Short-cut, get rid of TouchPad/Mouse.</li>
-  <li>Light Weight</li>
-  <li>Vs Atom, Sublime, Vim, NotePad++, TextWrangler (now BBEdit).</li>
-</ul>
+<p>In the next post, I’d describe how <em>Visual Studio Code</em> is setup and what tasks it is good at.</p>
 
   </div>
 <!-- from https://github.com/utterance/utterances -->
