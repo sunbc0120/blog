@@ -208,6 +208,15 @@ If it happened, however, intended message receiver shall be able to find out.</p
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Helper-Functions">
+<a class="anchor" href="#Helper-Functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helper Functions<a class="anchor-link" href="#Helper-Functions"> </a>
+</h3>
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -230,15 +239,6 @@ If it happened, however, intended message receiver shall be able to find out.</p
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Helper-Functions">
-<a class="anchor" href="#Helper-Functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helper Functions<a class="anchor-link" href="#Helper-Functions"> </a>
-</h3>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -401,17 +401,17 @@ If it happened, however, intended message receiver shall be able to find out.</p
 </h4>
 <ul>
 <li>Randomly pick 2 prime numbers (larger the better): <strong>p</strong> &amp; <strong>q</strong> </li>
-<li>Got their muliplication: <strong><code>n=pxq</code></strong>
+<li>Got their muliplication: <strong>n=pxq</strong>
 </li>
-<li>Got the Euler number: <strong><code>phi=(p-1)x(q-1)</code></strong>
+<li>Got the Euler number: <strong>phi=(p-1)x(q-1)</strong>
 </li>
 <li>Randomly find a prime number in the range of 1 to <strong>phi</strong> (larger the better): <strong>e</strong>
 </li>
 <li>Find the Modular Multiplicative Inverse of <strong>e</strong> relative to <strong>phi</strong>: <strong>k</strong>
 </li>
-<li>public key is: <strong><code>(n, e)</code></strong>
+<li>public key is: <strong>(n, e)</strong>
 </li>
-<li>private key is: <strong><code>(n, k)</code></strong>
+<li>private key is: <strong>(n, k)</strong>
 </li>
 </ul>
 
@@ -600,9 +600,12 @@ If it happened, however, intended message receiver shall be able to find out.</p
 <a class="anchor" href="#Encryption-&amp;-Decryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption &amp; Decryption<a class="anchor-link" href="#Encryption-&amp;-Decryption"> </a>
 </h4>
 <ul>
-<li>Original message to unicode numbers: msg</li>
-<li>Encrypt message: msg_encrypt = (msg^e)%n</li>
-<li>Decrypt message: msg = (msg_encrypt^k)%n</li>
+<li>Original message to unicode numbers: <strong>msg</strong>
+</li>
+<li>Encrypt message: <strong>msg_encrypt = (msg^e)%n</strong>
+</li>
+<li>Decrypt message: <strong>msg = (msg_encrypt^k)%n</strong>
+</li>
 </ul>
 
 </div>
@@ -1123,7 +1126,7 @@ Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :
 </li>
 <li>They know <strong>n</strong> which is the multiplication of prime numbers <strong>p</strong> and <strong>q</strong>
 </li>
-<li>Tom or Joseph need to do <strong>Prime Factorization</strong> as <strong><code>n=pxq</code></strong>
+<li>Tom or Joseph need to do <strong>Prime Factorization</strong> as <strong>n=pxq</strong>
 </li>
 <li>Given <strong>n</strong> is large enough (1024 bits in nowadays common sense), Tom and Joseph would had been long gone before a modern computer, even they have access to <a href="https://en.wikipedia.org/wiki/TOP500">Fugaku</a>, could manage to figure out which 2 prime numebrs Richael picked at the first place, let along about by "6:25 pm tomrrow".</li>
 <li>Richael may choose to update her key pairs frequently (change to different <strong>p</strong> and <strong>q</strong>) for the next message; this means Tom and Joseph can never catch up without a <a href="https://www.newscientist.com/article/2227387-quantum-computer-sets-new-record-for-finding-prime-number-factors/">Quantum Computer</a>.</li>
