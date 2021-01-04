@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image">
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Python Implementation of RSA, Digital Signature and Certificates | SUN’s Blog</title>
+<meta name="generator" content="Jekyll v4.1.1">
+<meta property="og:title" content="Python Implementation of RSA, Digital Signature and Certificates">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Implementation of RSA, Digital Signature and Certificates without divining too deep into the Mathematics; then list out key math principles for further reference. In this way, one can understand what and how as a context before drilling into why.">
+<meta property="og:description" content="Implementation of RSA, Digital Signature and Certificates without divining too deep into the Mathematics; then list out key math principles for further reference. In this way, one can understand what and how as a context before drilling into why.">
+<link rel="canonical" href="https://sunbc0120.github.io/blog/jupyter/python/math/2020/12/30/RSA.html">
+<meta property="og:url" content="https://sunbc0120.github.io/blog/jupyter/python/math/2020/12/30/RSA.html">
+<meta property="og:site_name" content="SUN’s Blog">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-12-30T00:00:00-06:00">
+<script type="application/ld+json">
+{"url":"https://sunbc0120.github.io/blog/jupyter/python/math/2020/12/30/RSA.html","@type":"BlogPosting","headline":"Python Implementation of RSA, Digital Signature and Certificates","dateModified":"2020-12-30T00:00:00-06:00","datePublished":"2020-12-30T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://sunbc0120.github.io/blog/jupyter/python/math/2020/12/30/RSA.html"},"description":"Implementation of RSA, Digital Signature and Certificates without divining too deep into the Mathematics; then list out key math principles for further reference. In this way, one can understand what and how as a context before drilling into why.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css">
+<link type="application/atom+xml" rel="alternate" href="https://sunbc0120.github.io/blog/feed.xml" title="SUN's Blog">
+<!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-51116273-3','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<script src="https://hypothes.is/embed.js" async></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body>
+<header class="site-header">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/blog/">SUN's Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Python Implementation of RSA, Digital Signature and Certificates</h1>
+<p class="page-description">Implementation of RSA, Digital Signature and Certificates without divining too deep into the Mathematics; then list out key math principles for further reference. In this way, one can understand *what* and *how* as a context before drilling into *why*.</p>
+<p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-12-30T00:00:00-06:00" itemprop="datePublished">
+        Dec 30, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#jupyter">jupyter</a>
+         
+      
+        <a class="category-tags-link" href="/blog/categories/#python">python</a>
+         
+      
+        <a class="category-tags-link" href="/blog/categories/#math">math</a>
+        
+      
+      </p>
+    
+
+    
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Introduction">Introduction </a></li>
+<li class="toc-entry toc-h2">
+<a href="#Rivest,-Shamir-and-Adleman-(RSA)-Cryptosystem">Rivest, Shamir and Adleman (RSA) Cryptosystem </a>
+<ul>
+<li class="toc-entry toc-h3">
+<a href="#Helper-Functions">Helper Functions </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Check-If-a-Number-is-Prime">Check If a Number is Prime </a></li>
+<li class="toc-entry toc-h4"><a href="#Modular-Multiplicative-Inverse-Function">Modular Multiplicative Inverse Function </a></li>
+<li class="toc-entry toc-h4"><a href="#List-All-Prime-Numbers-Smaller-Than-a-Value">List All Prime Numbers Smaller Than a Value </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3">
+<a href="#Encryption-&amp;-Decryption-Process">Encryption &amp; Decryption Process </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#Key-Pair:-Public-&amp;-Private-(Richael's-Task)">Key Pair: Public &amp; Private (Richael's Task) </a></li>
+<li class="toc-entry toc-h4"><a href="#Encryption-&amp;-Decryption">Encryption &amp; Decryption </a></li>
+<li class="toc-entry toc-h4"><a href="#Origial-Message-(Stephen's-Task)">Origial Message (Stephen's Task) </a></li>
+<li class="toc-entry toc-h4"><a href="#Encrption-(Stephen's-Task)">Encrption (Stephen's Task) </a></li>
+<li class="toc-entry toc-h4"><a href="#Decryption-(Richael's-Task)">Decryption (Richael's Task) </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#Why-is-this-secure?">Why is this secure? </a></li>
+<li class="toc-entry toc-h3"><a href="#Understand-Your-Computer">Understand Your Computer </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Digital-Signature">Digital Signature </a></li>
+<li class="toc-entry toc-h2"><a href="#encrypt-with-private-and-decrypt-with-public">encrypt with private and decrypt with public </a></li>
+<li class="toc-entry toc-h2"><a href="#Reference">Reference </a></li>
+</ul>
+<!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-12-30-RSA.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Introduction">
+<a class="anchor" href="#Introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction<a class="anchor-link" href="#Introduction"> </a>
+</h2>
+<p>Information is power. However, to transmit info is tricky. At least 2 issues need to be solved in information transmission: <strong>Security</strong> and <strong>Integrity</strong>.</p>
+<ul>
+<li><strong>Security (RSA)</strong></li>
+</ul>
+<p>No one can see the naked message other than the one intended.</p>
+<ul>
+<li><strong>Integrity (Digital Signature)</strong></li>
+</ul>
+<p>No one shall replace the message with another dummy one in the middle of transimission;<br>
+If it happened, however, intended message receiver shall be able to find out.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Rivest,-Shamir-and-Adleman-(RSA)-Cryptosystem">
+<a class="anchor" href="#Rivest,-Shamir-and-Adleman-(RSA)-Cryptosystem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rivest, Shamir and Adleman (RSA) Cryptosystem<a class="anchor-link" href="#Rivest,-Shamir-and-Adleman-(RSA)-Cryptosystem"> </a>
+</h2>
+<p><img src="/blog/images/copied_from_nb/rsa_imgs/bg2013062702.jpg" alt="rsa">
+@MIT</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Helper-Functions">
+<a class="anchor" href="#Helper-Functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helper Functions<a class="anchor-link" href="#Helper-Functions"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Check-If-a-Number-is-Prime">
+<a class="anchor" href="#Check-If-a-Number-is-Prime" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check If a Number is Prime<a class="anchor-link" href="#Check-If-a-Number-is-Prime"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description" open="">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">check_prime</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="sd">"""Check if num is prime</span>
+<span class="sd">    </span>
+<span class="sd">    """</span>
+    <span class="c1"># prime numbers are greater than 1</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># check for factors</span>
+        <span class="c1"># TODO: refactoring to parallel</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">num</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="c1"># if input number is less than</span>
+    <span class="c1"># or equal to 1, it is not prime</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Modular-Multiplicative-Inverse-Function">
+<a class="anchor" href="#Modular-Multiplicative-Inverse-Function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Modular Multiplicative Inverse Function<a class="anchor-link" href="#Modular-Multiplicative-Inverse-Function"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description" open="">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># https://stackoverflow.com/a/9758173/3317548</span>
+<span class="k">def</span> <span class="nf">egcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">g</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">egcd</span><span class="p">(</span><span class="n">b</span> <span class="o">%</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span> <span class="o">//</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">modinv</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">egcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"modular inverse does not exist"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">aa</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%</span> <span class="n">m</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span> <span class="o">*</span> <span class="n">aa</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aa</span><span class="p">,</span> <span class="n">bb</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="List-All-Prime-Numbers-Smaller-Than-a-Value">
+<a class="anchor" href="#List-All-Prime-Numbers-Smaller-Than-a-Value" aria-hidden="true"><span class="octicon octicon-link"></span></a>List All Prime Numbers Smaller Than a Value<a class="anchor-link" href="#List-All-Prime-Numbers-Smaller-Than-a-Value"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description" open="">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># https://stackoverflow.com/q/2068372/3317548</span>
+<span class="k">def</span> <span class="nf">find_prime</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">""" Returns  a list of primes &lt; n """</span>
+    <span class="n">sieve</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sieve</span><span class="p">[</span><span class="n">i</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="n">sieve</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">::</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">sieve</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Encryption-&amp;-Decryption-Process">
+<a class="anchor" href="#Encryption-&amp;-Decryption-Process" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption &amp; Decryption Process<a class="anchor-link" href="#Encryption-&amp;-Decryption-Process"> </a>
+</h3>
+<ul>
+<li>Receiver (Richael) generate a pair of keys: <strong>public</strong> &amp; <strong>private</strong>
+</li>
+<li>She keeps <strong>private</strong> key to herself confidentially</li>
+<li>She sends multiple copies of <strong>public</strong> key to every of her friends who need to send her message</li>
+<li>Any one got Richael's <strong>public</strong> key can send her message now. For instance, Stephen:  <ul>
+<li>Stephen'd like to send the original message: "Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)", to Richael.</li>
+<li>Stephen'd encrypt the message with Richaels <strong>public</strong> key into something looks random, e.g.  "MHgxNTMzCjB4MmFmNgoweGFiOA...YWE0CjB4MWZlMwoweDIzMGY="</li>
+<li>Stephen'd send that "random" stuff to Richael.</li>
+</ul>
+</li>
+<li>After receiving the "random" stuff from Stephen, Richael uses her own <strong>private</strong> key to decrypt it into orignal message "Hello Richael. How are you?!"</li>
+<li>Only with Richael's <strong>private</strong> key, the "random" stuff, produced with Richael's <strong>public</strong> key, can be decrpted. Unless Richael shares her <strong>private</strong> key, which she shall never do, no one other than Richael herself can obtain the original message "Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)"</li>
+<li>If Richael'd like to answer to Stephen, she must obtain Stephen's <strong>public</strong> key.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Key-Pair:-Public-&amp;-Private-(Richael's-Task)">
+<a class="anchor" href="#Key-Pair:-Public-&amp;-Private-(Richael's-Task)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Pair: Public &amp; Private (Richael's Task)<a class="anchor-link" href="#Key-Pair:-Public-&amp;-Private-(Richael's-Task)"> </a>
+</h4>
+<ul>
+<li>Randomly pick 2 prime numbers (larger the better): <strong>p</strong> &amp; <strong>q</strong> </li>
+<li>Got their muliplication: <strong><code>n=pxq</code></strong>
+</li>
+<li>Got the Euler number: <strong><code>phi=(p-1)x(q-1)</code></strong>
+</li>
+<li>Randomly find a prime number in the range of 1 to <strong>phi</strong> (larger the better): <strong>e</strong>
+</li>
+<li>Find the Modular Multiplicative Inverse of <strong>e</strong> relative to <strong>phi</strong>: <strong>k</strong>
+</li>
+<li>public key is: <strong><code>(n, e)</code></strong>
+</li>
+<li>private key is: <strong><code>(n, k)</code></strong>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(193, 883, 170419, 20, '0b101001100110110011')</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>169344</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="n">e</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>29567</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">k</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>26879</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">public_key</span><span class="p">,</span> <span class="n">private_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">public_key</span><span class="p">,</span> <span class="n">private_key</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((170419, 29567), (170419, 26879))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Encryption-&amp;-Decryption">
+<a class="anchor" href="#Encryption-&amp;-Decryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption &amp; Decryption<a class="anchor-link" href="#Encryption-&amp;-Decryption"> </a>
+</h4>
+<ul>
+<li>Original message to unicode numbers: msg</li>
+<li>Encrypt message: msg_encrypt = (msg^e)%n</li>
+<li>Decrypt message: msg = (msg_encrypt^k)%n</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Origial-Message-(Stephen's-Task)">
+<a class="anchor" href="#Origial-Message-(Stephen's-Task)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Origial Message (Stephen's Task)<a class="anchor-link" href="#Origial-Message-(Stephen's-Task)"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># unicode</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s2">"Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)"</span><span class="p">]</span>
+<span class="n">msg</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Output" data-close="Show Output"></summary>
+        <p>
+</p>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[72,
+ 101,
+ 108,
+ 108,
+ 111,
+ 32,
+ 82,
+ 105,
+ 99,
+ 104,
+ 97,
+ 101,
+ 108,
+ 46,
+ 32,
+ 76,
+ 101,
+ 116,
+ 39,
+ 115,
+ 32,
+ 109,
+ 101,
+ 101,
+ 116,
+ 32,
+ 97,
+ 116,
+ 32,
+ 54,
+ 58,
+ 50,
+ 53,
+ 32,
+ 112,
+ 109,
+ 32,
+ 116,
+ 111,
+ 109,
+ 111,
+ 114,
+ 114,
+ 111,
+ 119,
+ 32,
+ 97,
+ 116,
+ 32,
+ 116,
+ 104,
+ 101,
+ 32,
+ 97,
+ 105,
+ 114,
+ 112,
+ 111,
+ 114,
+ 116,
+ 32,
+ 71,
+ 97,
+ 116,
+ 101,
+ 53,
+ 44,
+ 32,
+ 84,
+ 101,
+ 114,
+ 109,
+ 105,
+ 110,
+ 97,
+ 108,
+ 32,
+ 50,
+ 32,
+ 58,
+ 41]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Encrption-(Stephen's-Task)">
+<a class="anchor" href="#Encrption-(Stephen's-Task)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encrption (Stephen's Task)<a class="anchor-link" href="#Encrption-(Stephen's-Task)"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># encrption</span>
+<span class="p">[(</span><span class="n">val</span> <span class="o">**</span> <span class="n">public_key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">public_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Output" data-close="Show Output"></summary>
+        <p>
+</p>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[169001,
+ 140011,
+ 129587,
+ 129587,
+ 126069,
+ 169062,
+ 132937,
+ 13635,
+ 118348,
+ 33595,
+ 38409,
+ 140011,
+ 129587,
+ 14689,
+ 169062,
+ 97239,
+ 140011,
+ 120437,
+ 154692,
+ 81300,
+ 169062,
+ 98901,
+ 140011,
+ 140011,
+ 120437,
+ 169062,
+ 38409,
+ 120437,
+ 169062,
+ 71964,
+ 92264,
+ 16571,
+ 60074,
+ 169062,
+ 72070,
+ 98901,
+ 169062,
+ 120437,
+ 126069,
+ 98901,
+ 126069,
+ 750,
+ 750,
+ 126069,
+ 116705,
+ 169062,
+ 38409,
+ 120437,
+ 169062,
+ 120437,
+ 33595,
+ 140011,
+ 169062,
+ 38409,
+ 13635,
+ 750,
+ 72070,
+ 126069,
+ 750,
+ 120437,
+ 169062,
+ 134415,
+ 38409,
+ 120437,
+ 140011,
+ 60074,
+ 1487,
+ 169062,
+ 65921,
+ 140011,
+ 750,
+ 98901,
+ 13635,
+ 32710,
+ 38409,
+ 129587,
+ 169062,
+ 16571,
+ 169062,
+ 92264,
+ 58013]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_msg</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">hex</span><span class="p">((</span><span class="n">val</span> <span class="o">**</span> <span class="n">public_key</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">public_key</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">])</span>
+<span class="n">encry_msg</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'0x29429\n0x222eb\n0x1fa33\n0x1fa33\n0x1ec75\n0x29466\n0x20749\n0x3543\n0x1ce4c\n0x833b\n0x9609\n0x222eb\n0x1fa33\n0x3961\n0x29466\n0x17bd7\n0x222eb\n0x1d675\n0x25c44\n0x13d94\n0x29466\n0x18255\n0x222eb\n0x222eb\n0x1d675\n0x29466\n0x9609\n0x1d675\n0x29466\n0x1191c\n0x16868\n0x40bb\n0xeaaa\n0x29466\n0x11986\n0x18255\n0x29466\n0x1d675\n0x1ec75\n0x18255\n0x1ec75\n0x2ee\n0x2ee\n0x1ec75\n0x1c7e1\n0x29466\n0x9609\n0x1d675\n0x29466\n0x1d675\n0x833b\n0x222eb\n0x29466\n0x9609\n0x3543\n0x2ee\n0x11986\n0x1ec75\n0x2ee\n0x1d675\n0x29466\n0x20d0f\n0x9609\n0x1d675\n0x222eb\n0xeaaa\n0x5cf\n0x29466\n0x10181\n0x222eb\n0x2ee\n0x18255\n0x3543\n0x7fc6\n0x9609\n0x1fa33\n0x29466\n0x40bb\n0x29466\n0x16868\n0xe29d'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_msg</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">encry_msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf8'</span><span class="p">))</span>
+<span class="n">encry_msg</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>b'MHgyOTQyOQoweDIyMmViCjB4MWZhMzMKMHgxZmEzMwoweDFlYzc1CjB4Mjk0NjYKMHgyMDc0OQoweDM1NDMKMHgxY2U0YwoweDgzM2IKMHg5NjA5CjB4MjIyZWIKMHgxZmEzMwoweDM5NjEKMHgyOTQ2NgoweDE3YmQ3CjB4MjIyZWIKMHgxZDY3NQoweDI1YzQ0CjB4MTNkOTQKMHgyOTQ2NgoweDE4MjU1CjB4MjIyZWIKMHgyMjJlYgoweDFkNjc1CjB4Mjk0NjYKMHg5NjA5CjB4MWQ2NzUKMHgyOTQ2NgoweDExOTFjCjB4MTY4NjgKMHg0MGJiCjB4ZWFhYQoweDI5NDY2CjB4MTE5ODYKMHgxODI1NQoweDI5NDY2CjB4MWQ2NzUKMHgxZWM3NQoweDE4MjU1CjB4MWVjNzUKMHgyZWUKMHgyZWUKMHgxZWM3NQoweDFjN2UxCjB4Mjk0NjYKMHg5NjA5CjB4MWQ2NzUKMHgyOTQ2NgoweDFkNjc1CjB4ODMzYgoweDIyMmViCjB4Mjk0NjYKMHg5NjA5CjB4MzU0MwoweDJlZQoweDExOTg2CjB4MWVjNzUKMHgyZWUKMHgxZDY3NQoweDI5NDY2CjB4MjBkMGYKMHg5NjA5CjB4MWQ2NzUKMHgyMjJlYgoweGVhYWEKMHg1Y2YKMHgyOTQ2NgoweDEwMTgxCjB4MjIyZWIKMHgyZWUKMHgxODI1NQoweDM1NDMKMHg3ZmM2CjB4OTYwOQoweDFmYTMzCjB4Mjk0NjYKMHg0MGJiCjB4Mjk0NjYKMHgxNjg2OAoweGUyOWQ='</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Decryption-(Richael's-Task)">
+<a class="anchor" href="#Decryption-(Richael's-Task)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decryption (Richael's Task)<a class="anchor-link" href="#Decryption-(Richael's-Task)"> </a>
+</h4>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># base64 decode and hex decode</span>
+<span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encry_msg</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf8'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Output" data-close="Show Output"></summary>
+        <p>
+</p>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[169001,
+ 140011,
+ 129587,
+ 129587,
+ 126069,
+ 169062,
+ 132937,
+ 13635,
+ 118348,
+ 33595,
+ 38409,
+ 140011,
+ 129587,
+ 14689,
+ 169062,
+ 97239,
+ 140011,
+ 120437,
+ 154692,
+ 81300,
+ 169062,
+ 98901,
+ 140011,
+ 140011,
+ 120437,
+ 169062,
+ 38409,
+ 120437,
+ 169062,
+ 71964,
+ 92264,
+ 16571,
+ 60074,
+ 169062,
+ 72070,
+ 98901,
+ 169062,
+ 120437,
+ 126069,
+ 98901,
+ 126069,
+ 750,
+ 750,
+ 126069,
+ 116705,
+ 169062,
+ 38409,
+ 120437,
+ 169062,
+ 120437,
+ 33595,
+ 140011,
+ 169062,
+ 38409,
+ 13635,
+ 750,
+ 72070,
+ 126069,
+ 750,
+ 120437,
+ 169062,
+ 134415,
+ 38409,
+ 120437,
+ 140011,
+ 60074,
+ 1487,
+ 169062,
+ 65921,
+ 140011,
+ 750,
+ 98901,
+ 13635,
+ 32710,
+ 38409,
+ 129587,
+ 169062,
+ 16571,
+ 169062,
+ 92264,
+ 58013]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_msg</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encry_msg</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_msg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_msg</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[72, 101, 108, 108, 111, 32, 82, 105, 99, 104, 97, 101, 108, 46, 32, 76, 101, 116, 39, 115, 32, 109, 101, 101, 116, 32, 97, 116, 32, 54, 58, 50, 53, 32, 112, 109, 32, 116, 111, 109, 111, 114, 114, 111, 119, 32, 97, 116, 32, 116, 104, 101, 32, 97, 105, 114, 112, 111, 114, 116, 32, 71, 97, 116, 101, 53, 44, 32, 84, 101, 114, 109, 105, 110, 97, 108, 32, 50, 32, 58, 41]
+Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Why-is-this-secure?">
+<a class="anchor" href="#Why-is-this-secure?" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why is this secure?<a class="anchor-link" href="#Why-is-this-secure?"> </a>
+</h3>
+<p><img src="/blog/images/copied_from_nb/rsa_imgs/euler.png" alt="Euler">
+@Euler<br>
+<em>He changed the world and he is now everywhere; Remeber Euler and everything about him, otherwise you'd fail at some stage of your life, some math exams for sure.</em></p>
+<ul>
+<li>If another friend of Richael, say Tom, would like to know what Stephen sent to Richael, without asking Stephen or Richael.</li>
+<li>Another Bad guy, say Joseph, was eavesdropping the network communication.</li>
+<li>Either Tom or Joseph would already have access to information of: <ul>
+<li>
+<strong>n</strong> and <strong>e</strong> from public key because Richael broadcast it on the network to her friends.</li>
+<li>
+<strong>msg_encrypt</strong> because Stephen broadcast it on the network for Richael to retrieve.</li>
+</ul>
+</li>
+<li>In order to decrypt <strong>msg_encrypt</strong>, they need <strong>private key</strong> <strong>(n, k)</strong>;</li>
+<li>They already have <strong>n</strong> so only need to figure out <strong>k</strong>.</li>
+<li>
+<strong>k</strong> was generated with <strong>e</strong> and <strong>phi</strong>.</li>
+<li>They know <strong>e</strong>. So they only need to know <em>phi</em>. </li>
+<li>They need <strong>p</strong> and <strong>q</strong> to know <strong>phi</strong>
+</li>
+<li>They know <strong>n</strong> which is the multiplication of prime numbers <strong>p</strong> and <strong>q</strong>
+</li>
+<li>Tom or Joseph need to do <strong>Prime Factorization</strong> as <strong><code>n=pxq</code></strong>
+</li>
+<li>Given <strong>n</strong> is large enough (1024 bits in nowadays common sense), Tom and Joseph would had been long gone before a modern computer, even they have access to <a href="https://en.wikipedia.org/wiki/TOP500">Fugaku</a>, could manage to figure out which 2 prime numebrs Richael picked at the first place, let along about by "6:25 pm tomrrow".</li>
+<li>Richael may choose to update her key pairs frequently (change to different <strong>p</strong> and <strong>q</strong>) for the next message; this means Tom and Joseph can never catch up without a <a href="https://www.newscientist.com/article/2227387-quantum-computer-sets-new-record-for-finding-prime-number-factors/">Quantum Computer</a>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Understand-Your-Computer">
+<a class="anchor" href="#Understand-Your-Computer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Understand Your Computer<a class="anchor-link" href="#Understand-Your-Computer"> </a>
+</h3>
+<p>Now if go to <code>~/.ssh</code>, you shall identify a number of different key files. Some of them are private key whilst others are public key; some are generated by OpenSSH whilst others by OpenSSL. They are also encoded by ASN.1 format among some variates.</p>
+<p>You can convert it into <code>*.PEM</code> file via</p>
+<p><code>ssh-keygen -f YOUR_KEY.pub -e -m pem &gt; YOUR_KEY.pub.pem</code></p>
+<p>Then inspect the content via:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
+
+<span class="n">pem_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"MII&lt;DO NOT SHARE PRIVATE KEY&gt;="</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">pem_key</span><span class="p">)</span>
+<span class="n">keyPriv</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="c1"># key now has all the components of the private</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">keyPriv</span><span class="o">.</span><span class="n">keydata</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">keyPriv</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">e</span><span class="p">,</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">p</span> <span class="o">*</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">q</span> <span class="o">==</span> <span class="n">keyPriv</span><span class="o">.</span><span class="n">n</span>
+</pre></div>
+<p>For public key <code>*.pub.pem</code>, it has only <code>keyPriv.n</code> and <code>keyPriv.e</code>.<br>
+See: <a href="https://www.dlitz.net/software/pycrypto/api/2.6/Crypto.PublicKey.RSA-module.html">https://www.dlitz.net/software/pycrypto/api/2.6/Crypto.PublicKey.RSA-module.html</a></p>
+<p>Similarly, if you check <code>less ~/.ssh/known_hosts</code>, you shall see a number of lines of records, composing of:</p>
+<p><code>&lt;domain_name,ip_address&gt; &lt;algorithm, e.g. ssh-rsa&gt; &lt;public_key&gt;</code></p>
+<p>You can convert those <code>public_key</code> into <code>*.pem</code> like above and use the code snippet to check its content. You shall got <code>n</code> and <code>e</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Digital-Signature">
+<a class="anchor" href="#Digital-Signature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Digital Signature<a class="anchor-link" href="#Digital-Signature"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="encrypt-with-private-and-decrypt-with-public">
+<a class="anchor" href="#encrypt-with-private-and-decrypt-with-public" aria-hidden="true"><span class="octicon octicon-link"></span></a>encrypt with private and decrypt with public<a class="anchor-link" href="#encrypt-with-private-and-decrypt-with-public"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_msg_sig</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="o">**</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">]</span>
+<span class="n">encry_msg_sig</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[2635,
+ 37914,
+ 164713,
+ 164713,
+ 68169,
+ 130655,
+ 113251,
+ 50498,
+ 97311,
+ 11400,
+ 168105,
+ 37914,
+ 164713,
+ 127787,
+ 130655,
+ 2635,
+ 68169,
+ 81579,
+ 130655,
+ 168105,
+ 10400,
+ 37914,
+ 130655,
+ 78811,
+ 68169,
+ 56775,
+ 27357,
+ 123830]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">val</span> <span class="o">**</span> <span class="n">public_key</span><span class="p">[]</span> <span class="o">%</span> <span class="n">n</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">encry_msg_sig</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[72,
+ 101,
+ 108,
+ 108,
+ 111,
+ 32,
+ 82,
+ 105,
+ 99,
+ 104,
+ 97,
+ 101,
+ 108,
+ 46,
+ 32,
+ 72,
+ 111,
+ 119,
+ 32,
+ 97,
+ 114,
+ 101,
+ 32,
+ 121,
+ 111,
+ 117,
+ 63,
+ 33]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reference">
+<a class="anchor" href="#Reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reference<a class="anchor-link" href="#Reference"> </a>
+</h2>
+<ul>
+<li><a href="https://blog.vrypan.net/2013/08/28/public-key-cryptography-for-non-geeks/">https://blog.vrypan.net/2013/08/28/public-key-cryptography-for-non-geeks/</a></li>
+<li><a href="https://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html">https://www.ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html</a></li>
+<li>
+<a href="https://us-cert.cisa.gov/ncas/tips/ST04-018#:~:text=Digital%20signatures%20work%20by%20proving,using%20the%20sender's%20private%20key">https://us-cert.cisa.gov/ncas/tips/ST04-018#:~:text=Digital%20signatures%20work%20by%20proving,using%20the%20sender's%20private%20key</a>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div>
+<!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js" repo="sunbc0120/blog" issue-term="title" label="blogpost-comment" theme="github-light" crossorigin="anonymous" async>
+</script><a class="u-url" href="/blog/jupyter/python/math/2020/12/30/RSA.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.</p>
+      </div>
+    </div>
+
+    <div class="social-links">
+<ul class="social-media-list">
+<li><a rel="me" href="https://github.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li>
+<li><a rel="me" href="https://stackoverflow.com/users/3317548" title="3317548"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#stackoverflow"></use></svg></a></li>
+<li><a rel="me" href="https://www.instagram.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#instagram"></use></svg></a></li>
+<li><a rel="me" href="https://www.linkedin.com/in/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg></a></li>
+<li><a rel="me" href="https://twitter.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li>
+<li><a rel="me" href="https://www.youtube.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#youtube"></use></svg></a></li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

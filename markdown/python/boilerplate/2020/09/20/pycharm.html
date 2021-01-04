@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image">
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Why I Like PyCharm, Especially its Pro Edition | SUN’s Blog</title>
+<meta name="generator" content="Jekyll v4.1.1">
+<meta property="og:title" content="Why I Like PyCharm, Especially its Pro Edition">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Setting up PyCharm Professional Edition for Remote Python Development.">
+<meta property="og:description" content="Setting up PyCharm Professional Edition for Remote Python Development.">
+<link rel="canonical" href="https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html">
+<meta property="og:url" content="https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html">
+<meta property="og:site_name" content="SUN’s Blog">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-09-20T00:00:00-05:00">
+<script type="application/ld+json">
+{"url":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html","@type":"BlogPosting","headline":"Why I Like PyCharm, Especially its Pro Edition","dateModified":"2020-09-20T00:00:00-05:00","datePublished":"2020-09-20T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html"},"description":"Setting up PyCharm Professional Edition for Remote Python Development.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css">
+<link type="application/atom+xml" rel="alternate" href="https://sunbc0120.github.io/blog/feed.xml" title="SUN's Blog">
+<!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-51116273-3','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<script src="https://hypothes.is/embed.js" async></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body>
+<header class="site-header">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/blog/">SUN's Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Why I Like PyCharm, Especially its Pro Edition</h1>
+<p class="page-description">Setting up PyCharm Professional Edition for Remote Python Development.</p>
+<p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-09-20T00:00:00-05:00" itemprop="datePublished">
+        Sep 20, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#markdown">markdown</a>
+         
+      
+        <a class="category-tags-link" href="/blog/categories/#python">python</a>
+         
+      
+        <a class="category-tags-link" href="/blog/categories/#boilerplate">boilerplate</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2">
+<a href="#overall-workflow">Overall Workflow</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#philosophy">Philosophy</a></li>
+<li class="toc-entry toc-h3"><a href="#setup">Setup</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2">
+<a href="#python-modularisation">Python Modularisation</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#from-python-scripts-to-python-package">From Python Scripts to Python Package</a></li>
+<li class="toc-entry toc-h3"><a href="#command-line-interface-cli">Command Line Interface (CLI)</a></li>
+<li class="toc-entry toc-h3"><a href="#project-template">Project Template</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2">
+<a href="#remote-kernel-and-file-synchronisation">Remote Kernel and File Synchronisation</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#remote-kernel">Remote Kernel</a></li>
+<li class="toc-entry toc-h3"><a href="#source-code-file-deployment">Source Code File Deployment</a></li>
+<li class="toc-entry toc-h3"><a href="#jupyter-server-ssh-tunnel-port-forwarding">Jupyter Server: SSH Tunnel Port Forwarding</a></li>
+<li class="toc-entry toc-h3"><a href="#docker-build-and-push">Docker BUILD and PUSH</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#summary">Summary</a></li>
+<li class="toc-entry toc-h2"><a href="#next">Next</a></li>
+</ul>
+<p><img src="/images/pycharm/pycharm.png" alt="PyCharm"><a href="https://www.jetbrains.com/pycharm/">https://www.jetbrains.com/pycharm/</a></p>
+
+<p>I’ve been using PyCharm for 5 years til now, including 2 years of time with its Professional Edition (the rest 3 years were depressing). Here is a summary on how it’s setup for my daily Python development tasks.</p>
+
+<h2 id="overall-workflow">
+<a class="anchor" href="#overall-workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overall Workflow</h2>
+
+<h3 id="philosophy">
+<a class="anchor" href="#philosophy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Philosophy</h3>
+
+<ul>
+  <li>
+    <p>Use local computer as a <code class="language-plaintext highlighter-rouge">terminal</code> to the cloud, and do only light-weighted tasks, e.g. managing files or source code, browsing documentation and search the Internet (more precisely, StackOverflow), etc.</p>
+  </li>
+  <li>Leave heavy-lifting tasks to disposable remote machine(s) on either on-promise or public cloud, i.e.
+    <ul>
+      <li>Program compiling, running and execution, e.g. GPU/TPU for Deep Learning tasks.</li>
+      <li>Network traffic, e.g. docker Pushing/Pulling, big dataset version control and its Uploading/Downloading.</li>
+      <li>Dataset management, e.g. PySpark job, SQL ETL, etc</li>
+    </ul>
+
+    <p><em>In short, don’t do any of this things on your local machine, regardless how powerful you think your computer is, how fast you assume your Broadband is, or how cheap you estimate your electricity bill is.</em></p>
+  </li>
+  <li>Leverage Git repository, e.g. GitHub, to version control source code.</li>
+  <li>Use Container Registry, e.g. Docker Hub, to manage your environment dependencies.</li>
+</ul>
+
+<h3 id="setup">
+<a class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h3>
+
+<p>Following these philosophies, a typical end-to-end setup would look like this[^1]:</p>
+
+<p><img class="mermaid" src="https://mermaid.ink/svg/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG7wn5eSIEdpdCBSZXBvc2l0b3J577iPLT4-8J-SuyBMb2NhbDogKDEpIFZlcnNpb24gQ29udHJvbFxu8J-SuyBMb2NhbC0-PvCfl5IgR2l0IFJlcG9zaXRvcnnvuI86ICg2KSBWZXJzaW9uIENvbnRyb2xcbvCfkrsgTG9jYWwtPj7imIHvuI8gUmVtb3RlOiAoMikgU291cmNlIENvZGUgU3luY1xu4piB77iPIFJlbW90ZS0-PvCfkrsgTG9jYWw6ICgzKSBKdXB5dGVyIE5vdGVib29rXG5Ob3RlIHJpZ2h0IG9mIPCfkrsgTG9jYWw6IFNGVFAvU1NIIFR1bm5lbFxu4piB77iPIFJlbW90ZS0-PvCfkLMgRG9ja2VyIFJlZ2lzdHJ5OiAoNCkgUHVzaFxu8J-QsyBEb2NrZXIgUmVnaXN0cnktPj7imIHvuI8gUmVtb3RlOiAoNSkgRGVwbG95bWVudFxu8J-XkiBHaXQgUmVwb3NpdG9yee-4jy0-PvCfkLMgRG9ja2VyIFJlZ2lzdHJ5OiAoNykgQ0kvQ0QiLCJtZXJtYWlkIjpudWxsfQ"></p>
+
+<p>More details will be covered below, but on a high level the workflow looks like:</p>
+
+<ul>
+  <li>Step 1. <code class="language-plaintext highlighter-rouge">git pull</code> source code from Git repo to local machine.</li>
+  <li>Step 2.1. Boot up remote resources, e.g. compute instance with GPU enabled, and use remote Python Interpreter with <em>PyCharm Remote</em>.</li>
+  <li>Step 2.2. Set up file Sync with <em>PyCharm Deployment</em> including <code class="language-plaintext highlighter-rouge">.git/</code>, which automatically Sync local files to the remote directory.</li>
+  <li>Step 3. Start Jupyter Notebook server on the remote, and setup SSH tunnel to the local, so you can do interactive coding <strong>Experiments</strong> in your local browser.</li>
+  <li>Step 4.1 Modularise code from Jupyter and organise it into Python package with help from an Integrated Development Environment (IDE) like <em>PyCharm</em>, including
+    <ul>
+      <li>Reformatting, e.g. <code class="language-plaintext highlighter-rouge">Black</code>.</li>
+      <li>
+<code class="language-plaintext highlighter-rouge">PyLint</code>.</li>
+      <li>Docstring, e.g. Numpy style.</li>
+      <li>Unit testing, e.g. <code class="language-plaintext highlighter-rouge">PyTest</code>.</li>
+      <li>Dependency requirements, e.g. <code class="language-plaintext highlighter-rouge">pipreqs .</code> in root folder.</li>
+      <li>Command Line Interface (CLI), e.g. <code class="language-plaintext highlighter-rouge">setup.py</code> entry point.</li>
+      <li>Documentation, Sphinx + Jupyter Notebook</li>
+      <li>Install the Python package at <em>remote</em>, e.g. <code class="language-plaintext highlighter-rouge">pip install -e .</code>
+</li>
+    </ul>
+  </li>
+  <li>Step 4.2 Write <code class="language-plaintext highlighter-rouge">Dockerfile</code> (local), build Docker Images (remote) and push it (at remote) to Container Registry, e.g. Docker Hub.</li>
+  <li>Step 5 Run Docker container on Remote, and test the functionalities are achieved per design.</li>
+  <li>Step 6 <code class="language-plaintext highlighter-rouge">git push</code> source code back to Git repo for back-up and peace-of-mind.</li>
+  <li>Step 7 Setup CI/CD pipeline to automatically run unit testing, compile documentation, update docker images, etc.</li>
+</ul>
+
+<p>This post will focus on <strong>Step 2</strong>, <strong>3</strong> and <strong>4</strong> setting ups with <em>PyCharm Pro</em>.</p>
+
+<blockquote>
+  <p>[^1]In case you wonder how the above graph is generated in Markdown with <code class="language-plaintext highlighter-rouge">Jekyll</code>:</p>
+
+  <div class="language-text highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>@startmermaid
+sequenceDiagram
+   🗒 Git Repository️-&gt;&gt;💻 Local: (1) Version Control
+   💻 Local-&gt;&gt;🗒 Git Repository️: (6) Version Control
+   💻 Local-&gt;&gt;☁️ Remote: (2) Source Code Sync
+   ☁️ Remote-&gt;&gt;💻 Local: (3) Jupyter Notebook
+   Note right of 💻 Local: SFTP/SSH Tunnel
+   ☁️ Remote-&gt;&gt;🐳 Docker Registry: (4) Push
+   🐳 Docker Registry-&gt;&gt;☁️ Remote: (5) Deployment
+   🗒 Git Repository️-&gt;&gt;🐳 Docker Registry: (7) CI/CD
+@endmermaid
+</code></pre></div>  </div>
+
+  <p>To get <code class="language-plaintext highlighter-rouge">mermaid</code> rendered in <code class="language-plaintext highlighter-rouge">Jekyll</code>, you need to configure its plugin <a href="https://github.com/jeffreytse/jekyll-spaceship#installation">jekyll-spaceship</a>.</p>
+</blockquote>
+
+<h2 id="python-modularisation">
+<a class="anchor" href="#python-modularisation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Python Modularisation</h2>
+
+<p>For every project, what you are doing end of the day shall be developing a software (in our case Python) module, to be hand over and re-used by yourself, your colleague, your client, your community or your market, perhaps in form of a delivery product that’s running online. If this is not the case, think twice about what the outcoming artifact is by end of your time, and why you are adding value with that time and resources spend.</p>
+
+<p>The gap between a Python newbie versus a professional developer, most of the time can be <strong>superficially</strong> overcome via the following 3 steps.</p>
+
+<h3 id="from-python-scripts-to-python-package">
+<a class="anchor" href="#from-python-scripts-to-python-package" aria-hidden="true"><span class="octicon octicon-link"></span></a>From Python Scripts to Python Package</h3>
+
+<p>Everything is covered in <a href="https://stackoverflow.com/a/47298178/">this 3min less step-by-step answer</a>. Just read and follow.</p>
+
+<h3 id="command-line-interface-cli">
+<a class="anchor" href="#command-line-interface-cli" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command Line Interface (CLI)</h3>
+
+<p>If you are sick of <code class="language-plaintext highlighter-rouge">python script.py</code> or <code class="language-plaintext highlighter-rouge">chmod +x script.py &amp;&amp; ./script.py</code>, all you need are the following 3 resources:</p>
+
+<ol>
+  <li><a href="https://amir.rachum.com/blog/2017/07/28/python-entry-points/">Python Entry Points Explained</a></li>
+  <li><a href="https://github.com/google/python-fire">Google Fire</a></li>
+  <li><a href="http://patorjk.com/software/taag/#p=display&amp;f=Graffiti&amp;t=Type%20Something%20">Text to ASCII art Generator</a></li>
+</ol>
+
+<h3 id="project-template">
+<a class="anchor" href="#project-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Template</h3>
+
+<p>After manually adding files several times, including:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">README.MD</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requirements.txt</code></li>
+  <li><code class="language-plaintext highlighter-rouge">setup.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Dockerfile</code></li>
+  <li><code class="language-plaintext highlighter-rouge">.gitignore</code></li>
+  <li><code class="language-plaintext highlighter-rouge">License</code></li>
+  <li>…</li>
+</ul>
+
+<p>You’ll realise you need something like <a href="https://github.com/pyscaffold/pyscaffold">Pyscaffold</a>.</p>
+
+<h2 id="remote-kernel-and-file-synchronisation">
+<a class="anchor" href="#remote-kernel-and-file-synchronisation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Remote Kernel and File Synchronisation</h2>
+
+<p>Everything in this world is an Optimisation problem, consisting of:</p>
+
+<ol>
+  <li>Objective(s)</li>
+  <li>Constrain(s) or requirement(s)</li>
+  <li>Algorithm, strategy or tools, that return an acceptable solution within reasonable amount of time.</li>
+</ol>
+
+<blockquote>
+
+  <p>Yes, setting-up optmisation is an optimisation problem itself, too.</p>
+
+</blockquote>
+
+<p>Now we shall be clear that (a) our objective is to develop professional Python module, and (b) our requirement is to fullfill the setting up philosophy that <em>do no heavy-lifting at local but only cloud</em>.</p>
+
+<p>Let’s see how the tool <em>Pycharm Pro</em> can <strong>help</strong> us to do this. At this stage, you shall get access to a remote compute machine with credentials, and setup a Python environment there, e.g. with <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a>.</p>
+
+<blockquote>
+  <p>If you wonder how to get a remote computer at free cost, consider the following options:</p>
+
+  <ol>
+    <li>Whether your organisation or institute have a High Performance Computing (HPC) cluster, and see if you can request a node. This normally apply to national education or research institute, e.g. Universities.</li>
+    <li>Whether your company have on-promise data center.</li>
+    <li>Whether your team do daily DevOps on public cloud.</li>
+    <li>Public cloud free tier, though this option won’t give you compute instance type more mighty than your local one.</li>
+    <li>Public cloud <a href="https://medium.com/@jaychapel/9-ways-to-get-aws-credits-9a85e0f452a1">Credits</a>.</li>
+    <li>Public cloud Funding Program for Startups, Academic Research Projects, e.g. <a href="https://aws.amazon.com/research-credits/">AWS Cloud Credits for Research</a>.</li>
+  </ol>
+</blockquote>
+
+<h3 id="remote-kernel">
+<a class="anchor" href="#remote-kernel" aria-hidden="true"><span class="octicon octicon-link"></span></a>Remote Kernel</h3>
+
+<p>There are different ways to choose a Python interpreter in <em>PyCharm Pro</em>, one of which is SSH interpreter, as shown in the image below. Here, you can type in the <code class="language-plaintext highlighter-rouge">Host</code>, <code class="language-plaintext highlighter-rouge">Port</code> and <code class="language-plaintext highlighter-rouge">Username</code>.</p>
+
+<p><img src="/images/pycharm/ssh.png" alt="Remote"></p>
+
+<p>After which you can input credentials information, e.g. <code class="language-plaintext highlighter-rouge">Authentication type</code>, <code class="language-plaintext highlighter-rouge">Private key file</code> and its <code class="language-plaintext highlighter-rouge">Passphrase</code> if applicable.</p>
+
+<blockquote>
+  <p>You shall explore <code class="language-plaintext highlighter-rouge">Docker</code> and <code class="language-plaintext highlighter-rouge">Docker Compose</code> as well.</p>
+</blockquote>
+
+<p><img src="/images/pycharm/ssh_creditential.png" alt="Remote"></p>
+
+<p>Finally, we can specify the Python Interpreter path on the remote instance, and also map the current <em>project root</em> to a <em>directory</em> on the remote. Check the box <code class="language-plaintext highlighter-rouge">Automatically upload project files to the server</code>.</p>
+
+<p><img src="/images/pycharm/remote.png" alt="Remote"></p>
+
+<h3 id="source-code-file-deployment">
+<a class="anchor" href="#source-code-file-deployment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source Code File Deployment</h3>
+
+<p>Now we can setup the deployment options. Below is my personal preference. Key points are:</p>
+
+<ol>
+  <li>
+    <p>Remove <code class="language-plaintext highlighter-rouge">.git/</code> from the <code class="language-plaintext highlighter-rouge">Exclude items by name</code>. This may be controversial but is vital for our setup:</p>
+
+    <ul>
+      <li>When you install your package with <code class="language-plaintext highlighter-rouge">pip install -e .</code> on the remote, some package has hard requirements to have <code class="language-plaintext highlighter-rouge">.git</code> present in the root folder otherwise it won’t install.</li>
+      <li>You do normal <code class="language-plaintext highlighter-rouge">git</code> operations only on local, and they will be automatically reflected on the remote. This saves you from doing <code class="language-plaintext highlighter-rouge">git push</code> at local followed by <code class="language-plaintext highlighter-rouge">git pull</code> on remote 24/7, even if your code is not ready for <code class="language-plaintext highlighter-rouge">commit</code> at all.</li>
+    </ul>
+  </li>
+  <li>Check <code class="language-plaintext highlighter-rouge">Create empty directory</code>. If you ever worked with <code class="language-plaintext highlighter-rouge">Flask</code> server you’d know what I’ve experienced.</li>
+  <li>Check <code class="language-plaintext highlighter-rouge">Delete target items when source ones do not exist</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">Upload changed files automatically to the default server: Always</code></li>
+</ol>
+
+<p><img src="/images/pycharm/deployment.png" alt="Remote"></p>
+
+<p>In short, we maintain one source-of-the-truth at local, and have the remote be an exact mirror copy of that.</p>
+
+<p><img src="/images/pycharm/start_SSH_session.png" alt="Remote"></p>
+
+<p>Under <code class="language-plaintext highlighter-rouge">Tools</code>, select <code class="language-plaintext highlighter-rouge">Start SSH session</code>, then you will open an Terminal to your remote server. Now it’s time to switch on <code class="language-plaintext highlighter-rouge">Tmux</code> and run <code class="language-plaintext highlighter-rouge">pip install -e .</code> in your Python package root directory at remote, and we’ve completed <strong>Step 2</strong>.</p>
+
+<h3 id="jupyter-server-ssh-tunnel-port-forwarding">
+<a class="anchor" href="#jupyter-server-ssh-tunnel-port-forwarding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Jupyter Server: SSH Tunnel Port Forwarding</h3>
+
+<p><img src="/images/pycharm/jupyter.png" alt="Remote"></p>
+
+<p>In the same Terminal to the remote, maybe within <code class="language-plaintext highlighter-rouge">Tmux</code>, start Jupyter server on the remote, e.g. <code class="language-plaintext highlighter-rouge">jupyter notebook --no-browser</code>. You will be returned with Jupyter server url, port number, and maybe its token. However, all of these information right now is relative to the remote instance only – you won’t be able to reach them from local.</p>
+
+<p>Unlike life, in Python most of the time had already been solved by others for us. The solution to the above problem are given:</p>
+<ol>
+  <li><a href="https://coderwall.com/p/ohk6cg/remote-access-to-ipython-notebooks-via-ssh">Remote Access to IPython Notebooks via SSH</a></li>
+  <li><a href="https://queirozf.com/entries/connect-to-jupyter-notebook-running-on-ec2-instance">Connect to Jupyter Notebook Running on EC2 Instance</a></li>
+</ol>
+
+<p>In short, at Terminal to the local, do</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;:localhost:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
+</code></pre></div></div>
+
+<p>Now you shall use your local browser and go to <code class="language-plaintext highlighter-rouge">http://localhost:&lt;local-port-you-just-specified&gt;</code>. If you can create a new Jupyter notebook, select your Python kernel, and run successfully <code class="language-plaintext highlighter-rouge">import &lt;you-python-module-name&gt;</code>, then we’ve completed <strong>Step 3</strong>.</p>
+
+<p>What you can do now typically is, <code class="language-plaintext highlighter-rouge">git checkout</code> to a feature branch at local, experiment with different code in notebooks with local browser, and keeps modularising those code into your source code sit in <code class="language-plaintext highlighter-rouge">PyCharm Pro</code> and get them into good shape using best practises, as described in <strong>Step 4.1</strong>. Finally, do <code class="language-plaintext highlighter-rouge">git push</code> to the code repository periodically.</p>
+
+<p>However, be aware that all the heavy code executions, data management, network traffics occur at the remote, but reflected in your local browser in notebooks, which can be downloaded as HTML or organised into documentation with <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>.</p>
+
+<h3 id="docker-build-and-push">
+<a class="anchor" href="#docker-build-and-push" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker BUILD and PUSH</h3>
+
+<h2 id="summary">
+<a class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h2>
+
+<p>Nothing is perfect in this world, but I’d like to focus on their strength.</p>
+
+<ul>
+  <li>Auto Fix</li>
+  <li>Auto Completion: Accurate &amp; Fast</li>
+  <li>Navigation Smooth</li>
+  <li>Templates of Frameworks</li>
+</ul>
+
+<h2 id="next">
+<a class="anchor" href="#next" aria-hidden="true"><span class="octicon octicon-link"></span></a>Next</h2>
+
+<p>VSCode Pro</p>
+
+<ul>
+  <li>Extension</li>
+  <li>Remote Dev</li>
+  <li>Short-cut, get rid of TouchPad/Mouse.</li>
+  <li>Light Weight</li>
+  <li>Vs Atom, Sublime, Vim, NotePad++, TextWrangler (now BBEdit).</li>
+</ul>
+
+  </div>
+<!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js" repo="sunbc0120/blog" issue-term="title" label="blogpost-comment" theme="github-light" crossorigin="anonymous" async>
+</script><a class="u-url" href="/blog/markdown/python/boilerplate/2020/09/20/pycharm.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.</p>
+      </div>
+    </div>
+
+    <div class="social-links">
+<ul class="social-media-list">
+<li><a rel="me" href="https://github.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li>
+<li><a rel="me" href="https://stackoverflow.com/users/3317548" title="3317548"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#stackoverflow"></use></svg></a></li>
+<li><a rel="me" href="https://www.instagram.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#instagram"></use></svg></a></li>
+<li><a rel="me" href="https://www.linkedin.com/in/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg></a></li>
+<li><a rel="me" href="https://twitter.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li>
+<li><a rel="me" href="https://www.youtube.com/sunbc0120" title="sunbc0120"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#youtube"></use></svg></a></li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
