@@ -113,7 +113,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      8 min read
+      16 min read
     
 </span></p>
 
@@ -153,17 +153,31 @@ window.onload = wrap_img;
 <a href="#Encryption-&amp;-Decryption-Process">Encryption &amp; Decryption Process </a>
 <ul>
 <li class="toc-entry toc-h4"><a href="#Key-Pair:-Public-&amp;-Private-(Richael's-Task)">Key Pair: Public &amp; Private (Richael's Task) </a></li>
-<li class="toc-entry toc-h4"><a href="#Encryption-&amp;-Decryption">Encryption &amp; Decryption </a></li>
+<li class="toc-entry toc-h4"><a href="#Encryption-&amp;-Decryption-Computation">Encryption &amp; Decryption Computation </a></li>
 <li class="toc-entry toc-h4"><a href="#Origial-Message-(Stephen's-Task)">Origial Message (Stephen's Task) </a></li>
 <li class="toc-entry toc-h4"><a href="#Encrption-(Stephen's-Task)">Encrption (Stephen's Task) </a></li>
 <li class="toc-entry toc-h4"><a href="#Decryption-(Richael's-Task)">Decryption (Richael's Task) </a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h3"><a href="#Why-is-this-secure?">Why is this secure? </a></li>
-<li class="toc-entry toc-h3"><a href="#Understand-Your-Computer">Understand Your Computer </a></li>
+<li class="toc-entry toc-h3"><a href="#Investigate-and-Understand-Your-Computer">Investigate and Understand Your Computer </a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h2"><a href="#Digital-Signature">Digital Signature </a></li>
+<li class="toc-entry toc-h2">
+<a href="#Digital-Signature">Digital Signature </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Two-Way-RSA">Two Way RSA </a></li>
+<li class="toc-entry toc-h3"><a href="#Hash">Hash </a></li>
+<li class="toc-entry toc-h3"><a href="#Richael's-Verification">Richael's Verification </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2">
+<a href="#Certificate">Certificate </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Problem:">Problem: </a></li>
+<li class="toc-entry toc-h3"><a href="#Solution:-Certificate-Authority-(CA)">Solution: Certificate Authority (CA) </a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h2"><a href="#Reference">Reference </a></li>
 </ul>
 <!--
@@ -228,6 +242,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
 </pre></div>
 
     </div>
@@ -444,7 +459,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(193, 883, 170419, 20, '0b101001100110110011')</pre>
+<pre>(941, 277, 260657, 20, '0b111111101000110001')</pre>
 </div>
 
 </div>
@@ -478,7 +493,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>169344</pre>
+<pre>259440</pre>
 </div>
 
 </div>
@@ -513,7 +528,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>29567</pre>
+<pre>96211</pre>
 </div>
 
 </div>
@@ -547,7 +562,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>26879</pre>
+<pre>32971</pre>
 </div>
 
 </div>
@@ -581,7 +596,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>((170419, 29567), (170419, 26879))</pre>
+<pre>((260657, 96211), (260657, 32971))</pre>
 </div>
 
 </div>
@@ -595,8 +610,8 @@ If it happened, however, intended message receiver shall be able to find out.</p
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Encryption-&amp;-Decryption">
-<a class="anchor" href="#Encryption-&amp;-Decryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption &amp; Decryption<a class="anchor-link" href="#Encryption-&amp;-Decryption"> </a>
+<h4 id="Encryption-&amp;-Decryption-Computation">
+<a class="anchor" href="#Encryption-&amp;-Decryption-Computation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption &amp; Decryption Computation<a class="anchor-link" href="#Encryption-&amp;-Decryption-Computation"> </a>
 </h4>
 <ul>
 <li>Original message to unicode numbers: <strong>msg</strong>
@@ -627,7 +642,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># unicode</span>
-<span class="n">msg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s2">"Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)"</span><span class="p">]</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s2">"Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)"</span><span class="p">]</span>
 <span class="n">msg</span>
 </pre></div>
 
@@ -725,6 +740,16 @@ If it happened, however, intended message receiver shall be able to find out.</p
  32,
  50,
  32,
+ 45,
+ 45,
+ 83,
+ 116,
+ 101,
+ 112,
+ 104,
+ 101,
+ 110,
+ 32,
  58,
  41]</pre>
 </div>
@@ -773,87 +798,97 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[169001,
- 140011,
- 129587,
- 129587,
- 126069,
- 169062,
- 132937,
- 13635,
- 118348,
- 33595,
- 38409,
- 140011,
- 129587,
- 14689,
- 169062,
- 97239,
- 140011,
- 120437,
- 154692,
- 81300,
- 169062,
- 98901,
- 140011,
- 140011,
- 120437,
- 169062,
- 38409,
- 120437,
- 169062,
- 71964,
- 92264,
- 16571,
- 60074,
- 169062,
- 72070,
- 98901,
- 169062,
- 120437,
- 126069,
- 98901,
- 126069,
- 750,
- 750,
- 126069,
- 116705,
- 169062,
- 38409,
- 120437,
- 169062,
- 120437,
- 33595,
- 140011,
- 169062,
- 38409,
- 13635,
- 750,
- 72070,
- 126069,
- 750,
- 120437,
- 169062,
- 134415,
- 38409,
- 120437,
- 140011,
- 60074,
- 1487,
- 169062,
- 65921,
- 140011,
- 750,
- 98901,
- 13635,
- 32710,
- 38409,
- 129587,
- 169062,
- 16571,
- 169062,
- 92264,
- 58013]</pre>
+<pre>[194726,
+ 73146,
+ 72544,
+ 72544,
+ 9248,
+ 92741,
+ 238646,
+ 85607,
+ 200450,
+ 48424,
+ 239858,
+ 73146,
+ 72544,
+ 91511,
+ 92741,
+ 212777,
+ 73146,
+ 65211,
+ 109261,
+ 61397,
+ 92741,
+ 74651,
+ 73146,
+ 73146,
+ 65211,
+ 92741,
+ 239858,
+ 65211,
+ 92741,
+ 78010,
+ 231217,
+ 128639,
+ 171443,
+ 92741,
+ 222131,
+ 74651,
+ 92741,
+ 65211,
+ 9248,
+ 74651,
+ 9248,
+ 236804,
+ 236804,
+ 9248,
+ 164721,
+ 92741,
+ 239858,
+ 65211,
+ 92741,
+ 65211,
+ 48424,
+ 73146,
+ 92741,
+ 239858,
+ 85607,
+ 236804,
+ 222131,
+ 9248,
+ 236804,
+ 65211,
+ 92741,
+ 154298,
+ 239858,
+ 65211,
+ 73146,
+ 171443,
+ 243311,
+ 92741,
+ 38634,
+ 73146,
+ 236804,
+ 74651,
+ 85607,
+ 230237,
+ 239858,
+ 72544,
+ 92741,
+ 128639,
+ 92741,
+ 95148,
+ 95148,
+ 37338,
+ 65211,
+ 73146,
+ 222131,
+ 48424,
+ 73146,
+ 230237,
+ 92741,
+ 231217,
+ 92222]</pre>
 </div>
 
 </div>
@@ -888,7 +923,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>'0x29429\n0x222eb\n0x1fa33\n0x1fa33\n0x1ec75\n0x29466\n0x20749\n0x3543\n0x1ce4c\n0x833b\n0x9609\n0x222eb\n0x1fa33\n0x3961\n0x29466\n0x17bd7\n0x222eb\n0x1d675\n0x25c44\n0x13d94\n0x29466\n0x18255\n0x222eb\n0x222eb\n0x1d675\n0x29466\n0x9609\n0x1d675\n0x29466\n0x1191c\n0x16868\n0x40bb\n0xeaaa\n0x29466\n0x11986\n0x18255\n0x29466\n0x1d675\n0x1ec75\n0x18255\n0x1ec75\n0x2ee\n0x2ee\n0x1ec75\n0x1c7e1\n0x29466\n0x9609\n0x1d675\n0x29466\n0x1d675\n0x833b\n0x222eb\n0x29466\n0x9609\n0x3543\n0x2ee\n0x11986\n0x1ec75\n0x2ee\n0x1d675\n0x29466\n0x20d0f\n0x9609\n0x1d675\n0x222eb\n0xeaaa\n0x5cf\n0x29466\n0x10181\n0x222eb\n0x2ee\n0x18255\n0x3543\n0x7fc6\n0x9609\n0x1fa33\n0x29466\n0x40bb\n0x29466\n0x16868\n0xe29d'</pre>
+<pre>'0x2f8a6\n0x11dba\n0x11b60\n0x11b60\n0x2420\n0x16a45\n0x3a436\n0x14e67\n0x30f02\n0xbd28\n0x3a8f2\n0x11dba\n0x11b60\n0x16577\n0x16a45\n0x33f29\n0x11dba\n0xfebb\n0x1aacd\n0xefd5\n0x16a45\n0x1239b\n0x11dba\n0x11dba\n0xfebb\n0x16a45\n0x3a8f2\n0xfebb\n0x16a45\n0x130ba\n0x38731\n0x1f67f\n0x29db3\n0x16a45\n0x363b3\n0x1239b\n0x16a45\n0xfebb\n0x2420\n0x1239b\n0x2420\n0x39d04\n0x39d04\n0x2420\n0x28371\n0x16a45\n0x3a8f2\n0xfebb\n0x16a45\n0xfebb\n0xbd28\n0x11dba\n0x16a45\n0x3a8f2\n0x14e67\n0x39d04\n0x363b3\n0x2420\n0x39d04\n0xfebb\n0x16a45\n0x25aba\n0x3a8f2\n0xfebb\n0x11dba\n0x29db3\n0x3b66f\n0x16a45\n0x96ea\n0x11dba\n0x39d04\n0x1239b\n0x14e67\n0x3835d\n0x3a8f2\n0x11b60\n0x16a45\n0x1f67f\n0x16a45\n0x173ac\n0x173ac\n0x91da\n0xfebb\n0x11dba\n0x363b3\n0xbd28\n0x11dba\n0x3835d\n0x16a45\n0x38731\n0x1683e'</pre>
 </div>
 
 </div>
@@ -922,7 +957,7 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>b'MHgyOTQyOQoweDIyMmViCjB4MWZhMzMKMHgxZmEzMwoweDFlYzc1CjB4Mjk0NjYKMHgyMDc0OQoweDM1NDMKMHgxY2U0YwoweDgzM2IKMHg5NjA5CjB4MjIyZWIKMHgxZmEzMwoweDM5NjEKMHgyOTQ2NgoweDE3YmQ3CjB4MjIyZWIKMHgxZDY3NQoweDI1YzQ0CjB4MTNkOTQKMHgyOTQ2NgoweDE4MjU1CjB4MjIyZWIKMHgyMjJlYgoweDFkNjc1CjB4Mjk0NjYKMHg5NjA5CjB4MWQ2NzUKMHgyOTQ2NgoweDExOTFjCjB4MTY4NjgKMHg0MGJiCjB4ZWFhYQoweDI5NDY2CjB4MTE5ODYKMHgxODI1NQoweDI5NDY2CjB4MWQ2NzUKMHgxZWM3NQoweDE4MjU1CjB4MWVjNzUKMHgyZWUKMHgyZWUKMHgxZWM3NQoweDFjN2UxCjB4Mjk0NjYKMHg5NjA5CjB4MWQ2NzUKMHgyOTQ2NgoweDFkNjc1CjB4ODMzYgoweDIyMmViCjB4Mjk0NjYKMHg5NjA5CjB4MzU0MwoweDJlZQoweDExOTg2CjB4MWVjNzUKMHgyZWUKMHgxZDY3NQoweDI5NDY2CjB4MjBkMGYKMHg5NjA5CjB4MWQ2NzUKMHgyMjJlYgoweGVhYWEKMHg1Y2YKMHgyOTQ2NgoweDEwMTgxCjB4MjIyZWIKMHgyZWUKMHgxODI1NQoweDM1NDMKMHg3ZmM2CjB4OTYwOQoweDFmYTMzCjB4Mjk0NjYKMHg0MGJiCjB4Mjk0NjYKMHgxNjg2OAoweGUyOWQ='</pre>
+<pre>b'MHgyZjhhNgoweDExZGJhCjB4MTFiNjAKMHgxMWI2MAoweDI0MjAKMHgxNmE0NQoweDNhNDM2CjB4MTRlNjcKMHgzMGYwMgoweGJkMjgKMHgzYThmMgoweDExZGJhCjB4MTFiNjAKMHgxNjU3NwoweDE2YTQ1CjB4MzNmMjkKMHgxMWRiYQoweGZlYmIKMHgxYWFjZAoweGVmZDUKMHgxNmE0NQoweDEyMzliCjB4MTFkYmEKMHgxMWRiYQoweGZlYmIKMHgxNmE0NQoweDNhOGYyCjB4ZmViYgoweDE2YTQ1CjB4MTMwYmEKMHgzODczMQoweDFmNjdmCjB4MjlkYjMKMHgxNmE0NQoweDM2M2IzCjB4MTIzOWIKMHgxNmE0NQoweGZlYmIKMHgyNDIwCjB4MTIzOWIKMHgyNDIwCjB4MzlkMDQKMHgzOWQwNAoweDI0MjAKMHgyODM3MQoweDE2YTQ1CjB4M2E4ZjIKMHhmZWJiCjB4MTZhNDUKMHhmZWJiCjB4YmQyOAoweDExZGJhCjB4MTZhNDUKMHgzYThmMgoweDE0ZTY3CjB4MzlkMDQKMHgzNjNiMwoweDI0MjAKMHgzOWQwNAoweGZlYmIKMHgxNmE0NQoweDI1YWJhCjB4M2E4ZjIKMHhmZWJiCjB4MTFkYmEKMHgyOWRiMwoweDNiNjZmCjB4MTZhNDUKMHg5NmVhCjB4MTFkYmEKMHgzOWQwNAoweDEyMzliCjB4MTRlNjcKMHgzODM1ZAoweDNhOGYyCjB4MTFiNjAKMHgxNmE0NQoweDFmNjdmCjB4MTZhNDUKMHgxNzNhYwoweDE3M2FjCjB4OTFkYQoweGZlYmIKMHgxMWRiYQoweDM2M2IzCjB4YmQyOAoweDExZGJhCjB4MzgzNWQKMHgxNmE0NQoweDM4NzMxCjB4MTY4M2U='</pre>
 </div>
 
 </div>
@@ -968,87 +1003,97 @@ If it happened, however, intended message receiver shall be able to find out.</p
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[169001,
- 140011,
- 129587,
- 129587,
- 126069,
- 169062,
- 132937,
- 13635,
- 118348,
- 33595,
- 38409,
- 140011,
- 129587,
- 14689,
- 169062,
- 97239,
- 140011,
- 120437,
- 154692,
- 81300,
- 169062,
- 98901,
- 140011,
- 140011,
- 120437,
- 169062,
- 38409,
- 120437,
- 169062,
- 71964,
- 92264,
- 16571,
- 60074,
- 169062,
- 72070,
- 98901,
- 169062,
- 120437,
- 126069,
- 98901,
- 126069,
- 750,
- 750,
- 126069,
- 116705,
- 169062,
- 38409,
- 120437,
- 169062,
- 120437,
- 33595,
- 140011,
- 169062,
- 38409,
- 13635,
- 750,
- 72070,
- 126069,
- 750,
- 120437,
- 169062,
- 134415,
- 38409,
- 120437,
- 140011,
- 60074,
- 1487,
- 169062,
- 65921,
- 140011,
- 750,
- 98901,
- 13635,
- 32710,
- 38409,
- 129587,
- 169062,
- 16571,
- 169062,
- 92264,
- 58013]</pre>
+<pre>[194726,
+ 73146,
+ 72544,
+ 72544,
+ 9248,
+ 92741,
+ 238646,
+ 85607,
+ 200450,
+ 48424,
+ 239858,
+ 73146,
+ 72544,
+ 91511,
+ 92741,
+ 212777,
+ 73146,
+ 65211,
+ 109261,
+ 61397,
+ 92741,
+ 74651,
+ 73146,
+ 73146,
+ 65211,
+ 92741,
+ 239858,
+ 65211,
+ 92741,
+ 78010,
+ 231217,
+ 128639,
+ 171443,
+ 92741,
+ 222131,
+ 74651,
+ 92741,
+ 65211,
+ 9248,
+ 74651,
+ 9248,
+ 236804,
+ 236804,
+ 9248,
+ 164721,
+ 92741,
+ 239858,
+ 65211,
+ 92741,
+ 65211,
+ 48424,
+ 73146,
+ 92741,
+ 239858,
+ 85607,
+ 236804,
+ 222131,
+ 9248,
+ 236804,
+ 65211,
+ 92741,
+ 154298,
+ 239858,
+ 65211,
+ 73146,
+ 171443,
+ 243311,
+ 92741,
+ 38634,
+ 73146,
+ 236804,
+ 74651,
+ 85607,
+ 230237,
+ 239858,
+ 72544,
+ 92741,
+ 128639,
+ 92741,
+ 95148,
+ 95148,
+ 37338,
+ 65211,
+ 73146,
+ 222131,
+ 48424,
+ 73146,
+ 230237,
+ 92741,
+ 231217,
+ 92222]</pre>
 </div>
 
 </div>
@@ -1085,8 +1130,8 @@ If it happened, however, intended message receiver shall be able to find out.</p
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[72, 101, 108, 108, 111, 32, 82, 105, 99, 104, 97, 101, 108, 46, 32, 76, 101, 116, 39, 115, 32, 109, 101, 101, 116, 32, 97, 116, 32, 54, 58, 50, 53, 32, 112, 109, 32, 116, 111, 109, 111, 114, 114, 111, 119, 32, 97, 116, 32, 116, 104, 101, 32, 97, 105, 114, 112, 111, 114, 116, 32, 71, 97, 116, 101, 53, 44, 32, 84, 101, 114, 109, 105, 110, 97, 108, 32, 50, 32, 58, 41]
-Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :)
+<pre>[72, 101, 108, 108, 111, 32, 82, 105, 99, 104, 97, 101, 108, 46, 32, 76, 101, 116, 39, 115, 32, 109, 101, 101, 116, 32, 97, 116, 32, 54, 58, 50, 53, 32, 112, 109, 32, 116, 111, 109, 111, 114, 114, 111, 119, 32, 97, 116, 32, 116, 104, 101, 32, 97, 105, 114, 112, 111, 114, 116, 32, 71, 97, 116, 101, 53, 44, 32, 84, 101, 114, 109, 105, 110, 97, 108, 32, 50, 32, 45, 45, 83, 116, 101, 112, 104, 101, 110, 32, 58, 41]
+Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)
 </pre>
 </div>
 </div>
@@ -1113,7 +1158,7 @@ Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :
 <li>
 <strong>n</strong> and <strong>e</strong> from public key because Richael broadcast it on the network to her friends.</li>
 <li>
-<strong>msg_encrypt</strong> because Stephen broadcast it on the network for Richael to retrieve.</li>
+<strong>msg_encrypt</strong> because Stephen put it on the network for Richael to retrieve.</li>
 </ul>
 </li>
 <li>In order to decrypt <strong>msg_encrypt</strong>, they need <strong>private key</strong> <strong>(n, k)</strong>;</li>
@@ -1128,7 +1173,7 @@ Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :
 <li>Tom or Joseph need to do <strong>Prime Factorization</strong> as <strong>n=pxq</strong>
 </li>
 <li>Given <strong>n</strong> is large enough (1024 bits in nowadays common sense), Tom and Joseph would had been long gone before a modern computer, even they have access to <a href="https://en.wikipedia.org/wiki/TOP500">Fugaku</a>, could manage to figure out which 2 prime numebrs Richael picked at the first place, let along about by "6:25 pm tomrrow".</li>
-<li>Richael may choose to update her key pairs frequently (change to different <strong>p</strong> and <strong>q</strong>) for the next message; this means Tom and Joseph can never catch up without a <a href="https://www.newscientist.com/article/2227387-quantum-computer-sets-new-record-for-finding-prime-number-factors/">Quantum Computer</a>.</li>
+<li>Richael may choose to update her key pairs frequently (change to different <strong>p</strong> and <strong>q</strong>) for the next message; this means Tom and Joseph can never catch up without a <a href="https://www.newscientist.com/article/2227387-quantum-computer-sets-new-record-for-finding-prime-number-factors/">Quantum Computer</a> on their hands.</li>
 </ul>
 
 </div>
@@ -1137,17 +1182,17 @@ Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Understand-Your-Computer">
-<a class="anchor" href="#Understand-Your-Computer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Understand Your Computer<a class="anchor-link" href="#Understand-Your-Computer"> </a>
+<h3 id="Investigate-and-Understand-Your-Computer">
+<a class="anchor" href="#Investigate-and-Understand-Your-Computer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Investigate and Understand Your Computer<a class="anchor-link" href="#Investigate-and-Understand-Your-Computer"> </a>
 </h3>
 <p>Now if go to <code>~/.ssh</code>, you shall identify a number of different key files. Some of them are private key whilst others are public key; some are generated by OpenSSH whilst others by OpenSSL. They are also encoded by ASN.1 format among some variates.</p>
-<ol>
-<li>You can convert it into <code>*.PEM</code> file via:</li>
-</ol>
+<ul>
+<li>You can convert it into <code>*.PEM</code> file via:  </li>
+</ul>
 <p><code>ssh-keygen -f YOUR_KEY.pub -e -m pem &gt; YOUR_KEY.pub.pem</code></p>
-<ol>
+<ul>
 <li>Then inspect the content via:</li>
-</ol>
+</ul>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
 <span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64decode</span>
 
@@ -1162,11 +1207,11 @@ Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 :
 </pre></div>
 <p>For public key <code>*.pub.pem</code>, it has only <code>keyPriv.n</code> and <code>keyPriv.e</code>.<br>
 See: <a href="https://www.dlitz.net/software/pycrypto/api/2.6/Crypto.PublicKey.RSA-module.html">https://www.dlitz.net/software/pycrypto/api/2.6/Crypto.PublicKey.RSA-module.html</a></p>
-<ol>
+<ul>
 <li>Similarly, if you check <code>less ~/.ssh/known_hosts</code>, you shall see a number of lines of records, composing of:  </li>
-</ol>
+</ul>
 <p><code>&lt;domain_name,ip_address&gt; &lt;algorithm, e.g. ssh-rsa&gt; &lt;public_key&gt;</code></p>
-<p>You can convert those <code>public_key</code> into <code>*.pem</code> like above and use the code snippet to check its content. You shall got <code>n</code> and <code>e</code>.</p>
+<p>You can convert those <code>public_key</code> into <code>*.pem</code> like above and use the code snippet to check its content. You shall got <code>n</code> and <code>e</code>. When you send message to those servers, your message is encrypted with those <code>n</code> and <code>e</code>, and those server will use their private key to decrypt your message.</p>
 
 </div>
 </div>
@@ -1177,15 +1222,906 @@ See: <a href="https://www.dlitz.net/software/pycrypto/api/2.6/Crypto.PublicKey.R
 <h2 id="Digital-Signature">
 <a class="anchor" href="#Digital-Signature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Digital Signature<a class="anchor-link" href="#Digital-Signature"> </a>
 </h2>
-<p>There are 2 problems with the encryption and decryption process described above:</p>
-<ol>
-<li>What if Joseph pretends to be Stephen, and sends her another message encrypted with Richaels <strong>public key</strong>, saying "Hello Richael. Let's meet at 6:25 am the day after tomorrow at the train station Gate 1 :)".</li>
+<p>What if Joseph pretends to be Stephen, and sends Richael another message encrypted with Richaels public key, saying "Hello Richael. Let's meet at 6:25 am the day after tomorrow at the train station Gate 1 :)". How does Richael know the message is truly from Stephen, or being pretended by Joseph?</p>
+<p>Another case would be Joseph intercepted Stephen's <strong>msg_encrypt</strong>, then modified/deleted/added some characters in that <em>random</em> stuff ("MHgxNTMzCjB4MmFmNgoweGFiO&gt;B&lt;...YWE0CjB4MWZlMwoweDIzMGY="), before sending to Rachael for decryption? Even though he cannot decrypt the message without Richael's private key, he can still alter it. For example, hiding some information about location:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_msg_alter</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+    <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encry_msg</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)[:</span><span class="mi">33</span><span class="p">])</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+        <span class="s2">"utf8"</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">encry_msg_alter</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>b'MHgyZjhhNgoweDExZGJhCjB4MTFiNjAKMHgxMWI2MAoweDI0MjAKMHgxNmE0NQoweDNhNDM2CjB4MTRlNjcKMHgzMGYwMgoweGJkMjgKMHgzYThmMgoweDExZGJhCjB4MTFiNjAKMHgxNjU3NwoweDE2YTQ1CjB4MzNmMjkKMHgxMWRiYQoweGZlYmIKMHgxYWFjZAoweGVmZDUKMHgxNmE0NQoweDEyMzliCjB4MTFkYmEKMHgxMWRiYQoweGZlYmIKMHgxNmE0NQoweDNhOGYyCjB4ZmViYgoweDE2YTQ1CjB4MTMwYmEKMHgzODczMQoweDFmNjdmCjB4MjlkYjM='</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_msg</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encry_msg_alter</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_msg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_msg</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[72, 101, 108, 108, 111, 32, 82, 105, 99, 104, 97, 101, 108, 46, 32, 76, 101, 116, 39, 115, 32, 109, 101, 101, 116, 32, 97, 116, 32, 54, 58, 50, 53]
+Hello Richael. Let's meet at 6:25
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Two-Way-RSA">
+<a class="anchor" href="#Two-Way-RSA" aria-hidden="true"><span class="octicon octicon-link"></span></a>Two Way RSA<a class="anchor-link" href="#Two-Way-RSA"> </a>
+</h3>
+<p>Previously, we introduced only one-way RSA: everyone has Richael's <strong>public</strong> key. But Richael can also have others' <strong>public</strong> key, especially, the message sender Stephen's:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Euler number</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi</span>
+
+<span class="n">e</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="n">e</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">k</span>
+
+<span class="n">public_key_stephen</span><span class="p">,</span> <span class="n">private_key_stephen</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">public_key_stephen</span><span class="p">,</span> <span class="n">private_key_stephen</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((2701, 1993), (2701, 1177))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Hash">
+<a class="anchor" href="#Hash" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hash<a class="anchor-link" href="#Hash"> </a>
+</h3>
+<p>Stephen will keep his <strong>private</strong> key to himself, but share the <strong>public</strong> key to his friends, including Richael. Before Stephen sends the message to Richael, he will also generate an <strong>abstract</strong> of the total message, e.g. with Hash:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">signature</span> <span class="o">=</span> <span class="n">sha256</span><span class="p">(</span><span class="sa">b</span><span class="s2">"Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)"</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<span class="n">signature</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'22edc929d9211d1102f7af88b85ea472c9e64629074985cba94607526dff3029'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now Stephen will encrypt this abstract with his <strong>private</strong> key:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_sig</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="nb">hex</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key_stephen</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">private_key_stephen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">signature</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># base64 encode</span>
+<span class="n">encry_sig</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">encry_sig</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span>
+<span class="n">encry_sig</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>b'MHg4YjEKMHg4YjEKMHg0NGMKMHg2NAoweDlmMAoweDViMgoweDhiMQoweDViMgoweDY0CjB4NWIyCjB4OGIxCjB4MTBjCjB4MTBjCjB4NjQKMHgxMGMKMHgxMGMKMHg5MjYKMHg4YjEKMHgyZjkKMHg4NTUKMHg2MQoweDJmOQoweDFlZQoweDFlZQoweGEzZQoweDFlZQoweDY2OAoweDQ0YwoweDYxCjB4M2U5CjB4ODU1CjB4OGIxCjB4OWYwCjB4NWIyCjB4NDRjCjB4ZjQKMHgzZTkKMHhmNAoweDhiMQoweDViMgoweDkyNgoweDg1NQoweDNlOQoweDViMgoweDFlZQoweDY2OAoweDlmMAoweGEzZQoweDYxCjB4NWIyCjB4M2U5CjB4ZjQKMHg5MjYKMHg4NTUKMHg2NjgKMHg4YjEKMHhmNAoweDY0CjB4MmY5CjB4MmY5CjB4MzMKMHg5MjYKMHg4YjEKMHg1YjI='</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, the message ready to be shipped to Richael by Stephen becomes:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">message_to_Richael</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"msg"</span><span class="p">:</span> <span class="n">encry_msg</span><span class="p">,</span> <span class="s2">"signature"</span><span class="p">:</span> <span class="n">encry_sig</span><span class="p">}</span>
+<span class="n">message_to_Richael</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'msg': b'MHgyZjhhNgoweDExZGJhCjB4MTFiNjAKMHgxMWI2MAoweDI0MjAKMHgxNmE0NQoweDNhNDM2CjB4MTRlNjcKMHgzMGYwMgoweGJkMjgKMHgzYThmMgoweDExZGJhCjB4MTFiNjAKMHgxNjU3NwoweDE2YTQ1CjB4MzNmMjkKMHgxMWRiYQoweGZlYmIKMHgxYWFjZAoweGVmZDUKMHgxNmE0NQoweDEyMzliCjB4MTFkYmEKMHgxMWRiYQoweGZlYmIKMHgxNmE0NQoweDNhOGYyCjB4ZmViYgoweDE2YTQ1CjB4MTMwYmEKMHgzODczMQoweDFmNjdmCjB4MjlkYjMKMHgxNmE0NQoweDM2M2IzCjB4MTIzOWIKMHgxNmE0NQoweGZlYmIKMHgyNDIwCjB4MTIzOWIKMHgyNDIwCjB4MzlkMDQKMHgzOWQwNAoweDI0MjAKMHgyODM3MQoweDE2YTQ1CjB4M2E4ZjIKMHhmZWJiCjB4MTZhNDUKMHhmZWJiCjB4YmQyOAoweDExZGJhCjB4MTZhNDUKMHgzYThmMgoweDE0ZTY3CjB4MzlkMDQKMHgzNjNiMwoweDI0MjAKMHgzOWQwNAoweGZlYmIKMHgxNmE0NQoweDI1YWJhCjB4M2E4ZjIKMHhmZWJiCjB4MTFkYmEKMHgyOWRiMwoweDNiNjZmCjB4MTZhNDUKMHg5NmVhCjB4MTFkYmEKMHgzOWQwNAoweDEyMzliCjB4MTRlNjcKMHgzODM1ZAoweDNhOGYyCjB4MTFiNjAKMHgxNmE0NQoweDFmNjdmCjB4MTZhNDUKMHgxNzNhYwoweDE3M2FjCjB4OTFkYQoweGZlYmIKMHgxMWRiYQoweDM2M2IzCjB4YmQyOAoweDExZGJhCjB4MzgzNWQKMHgxNmE0NQoweDM4NzMxCjB4MTY4M2U=',
+ 'signature': b'MHg4YjEKMHg4YjEKMHg0NGMKMHg2NAoweDlmMAoweDViMgoweDhiMQoweDViMgoweDY0CjB4NWIyCjB4OGIxCjB4MTBjCjB4MTBjCjB4NjQKMHgxMGMKMHgxMGMKMHg5MjYKMHg4YjEKMHgyZjkKMHg4NTUKMHg2MQoweDJmOQoweDFlZQoweDFlZQoweGEzZQoweDFlZQoweDY2OAoweDQ0YwoweDYxCjB4M2U5CjB4ODU1CjB4OGIxCjB4OWYwCjB4NWIyCjB4NDRjCjB4ZjQKMHgzZTkKMHhmNAoweDhiMQoweDViMgoweDkyNgoweDg1NQoweDNlOQoweDViMgoweDFlZQoweDY2OAoweDlmMAoweGEzZQoweDYxCjB4NWIyCjB4M2U5CjB4ZjQKMHg5MjYKMHg4NTUKMHg2NjgKMHg4YjEKMHhmNAoweDY0CjB4MmY5CjB4MmY5CjB4MzMKMHg5MjYKMHg4YjEKMHg1YjI='}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Richael's-Verification">
+<a class="anchor" href="#Richael's-Verification" aria-hidden="true"><span class="octicon octicon-link"></span></a>Richael's Verification<a class="anchor-link" href="#Richael's-Verification"> </a>
+</h3>
+<p>Now, what Richael will do is:</p>
+<ul>
+<li>Use her own <strong>private</strong> key to decrypt <strong>msg</strong>
+</li>
+<li>Use Stephen's <strong>public</strong> key to decrypt <strong>signature</strong>
+</li>
+<li>SHA256 Hash the decrypted <strong>msg</strong> to reproduce the <strong>signature</strong>
+</li>
+<li>Compare the 2 <strong>signatures</strong> and see if they match:<ul>
+<li>if they do, the message is from Stephen and it is intact.</li>
+<li>if not, something dodgy happened.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_msg</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"msg"</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">decry_msg</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_msg</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_msg</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_sig</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">public_key_stephen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key_stephen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"signature"</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_sig</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[50, 50, 101, 100, 99, 57, 50, 57, 100, 57, 50, 49, 49, 100, 49, 49, 48, 50, 102, 55, 97, 102, 56, 56, 98, 56, 53, 101, 97, 52, 55, 50, 99, 57, 101, 54, 52, 54, 50, 57, 48, 55, 52, 57, 56, 53, 99, 98, 97, 57, 52, 54, 48, 55, 53, 50, 54, 100, 102, 102, 51, 48, 50, 57]
+22edc929d9211d1102f7af88b85ea472c9e64629074985cba94607526dff3029
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sha256</span><span class="p">(</span>
+    <span class="sa">b</span><span class="s2">"Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">sha256</span><span class="p">(</span><span class="sa">b</span><span class="s2">"Hello Richael. Let's meet at 6:25"</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig</span><span class="p">]</span>
+<span class="p">),</span> <span class="s2">"[Attention]: Dodgy thing happened with this message! Be CAREFULL!"</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AssertionError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-a3fa67042ccb&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> assert sha256(b"Hello Richael. Let's meet at 6:25").hexdigest() == "".join(
+<span class="ansi-green-intense-fg ansi-bold">      2</span>     <span class="ansi-blue-fg">[</span>chr<span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> decry_sig<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> ), "[Attention]: Dodgy thing happened with this message! Be CAREFULL!"
+</span>
+<span class="ansi-red-fg">AssertionError</span>: [Attention]: Dodgy thing happened with this message! Be CAREFULL!</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For Joseph, he can also have Stephen's <strong>public key</strong>, intercept and decrypt the signature. However, if now he wants to alter the message ("random" stuff) without being found out, he must alter the Hash ("22edc929d9211d1102f7af88b85ea472c9e64629074985cba94607526dff3029") as well and <strong>make sure they match</strong>. Without decrypting the original message, it is infeasible to generated its Hash. Therefore Joseph has 2 options: alter the message and being found out, or leave message as is.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">encry_sig_alter</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="nb">hex</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key_stephen</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">private_key_stephen</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># base64 encode</span>
+<span class="n">encry_sig_alter</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">encry_sig_alter</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span>
+<span class="n">encry_sig_alter</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>b'MHg4YjEKMHg4YjEKMHg0NGMKMHg2NAoweDlmMAoweDViMgoweDhiMQoweDViMgoweDY0CjB4NWIy'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_sig_alter</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">public_key_stephen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key_stephen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">encry_sig_alter</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_sig_alter</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig_alter</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[50, 50, 101, 100, 99, 57, 50, 57, 100, 57]
+22edc929d9
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Certificate">
+<a class="anchor" href="#Certificate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Certificate<a class="anchor-link" href="#Certificate"> </a>
+</h2>
+<h3 id="Problem:">
+<a class="anchor" href="#Problem:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem:<a class="anchor-link" href="#Problem:"> </a>
+</h3>
+<p>Last issue: How do we trust those <strong>public</strong> keys received from different identities?</p>
+<p>Joseph could totally generate his own key pair and pretend to be Richael. When Richael's friends receive the <strong>public key</strong>, how do they know it truly comes from Richael, rather than Joseph?</p>
+<p>Joseph could also generate another pair of keys, sent the <strong>public</strong> key to Richael and claming it is from Stephen. How does Richael know the <strong>public</strong> key is truly from Stephen?</p>
+<p>Without verification, Joseph hijacks the information transmission between Richael and Stephen.</p>
+<h3 id="Solution:-Certificate-Authority-(CA)">
+<a class="anchor" href="#Solution:-Certificate-Authority-(CA)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Solution: Certificate Authority (CA)<a class="anchor-link" href="#Solution:-Certificate-Authority-(CA)"> </a>
+</h3>
+<p>CA is similar to the driving license issuer, e.g. Police Station or Government. They will verify identity of servers sharing their <strong>public</strong> key to other people and make sure it's genuine. For example:</p>
+<ul>
+<li>Stephen, to avoid being pretended by any other indiviudal like Joseph, must visit CA and show all his proof to convence CA that he is the real Stephen. </li>
+<li>Once convenced, CA will take over Stephen's <strong>public</strong> key plus other personal information, e.g., name, birthday, address, etc, encrypt them with CA's <strong>private</strong> key, and issue back to Stephen. This is called <strong>Certificate</strong>.</li>
+<li>When sending message to Richael, Stephen actually sends 3 things:<ol>
+<li>Certificate Issued by CA</li>
+<li>Message encrypted by Richael's <strong>public</strong> key</li>
+<li>Message Signature encrypted by Stephen's <strong>private</strong> key</li>
 </ol>
-<p><em>Answer</em>: this is solved by Digital Signature</p>
-<ol>
-<li>Joseph could totally generate his own key pair and pretend to be Richael. When Richael's friends receive "her" <strong>public key</strong>, how do they know it truly comes from Richael, rather than Joseph?</li>
+</li>
+<li>When receiving message from Stephen, Richael does:<ol>
+<li>Download the <strong>public</strong> key of CA and use it to decrypt <strong>Certificate</strong> included by Stephen. She will obtain the <strong>public</strong> key along with other identity information, for example, name, birthday, address, etc. </li>
+<li>Only if she verified those information and confirm it's Stephen, this <strong>public</strong> key is used to decrypt the <strong>signature</strong>.</li>
+<li>Decrypt the message with her own <strong>private</strong> key, and Hash it to reproduce the <strong>signature</strong>.</li>
+<li>Compare the 2 <strong>signaure</strong> and see if they match.</li>
 </ol>
-<p><em>Answer</em>: this is solved by Certificate</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span> <span class="nb">bin</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Euler number</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi</span>
+
+<span class="n">e</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">find_prime</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">check_prime</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="n">e</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">k</span>
+
+<span class="n">public_key_CA</span><span class="p">,</span> <span class="n">private_key_CA</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">public_key_CA</span><span class="p">,</span> <span class="n">private_key_CA</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((68513, 64123), (68513, 11767))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stephen_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"pub_key"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">public_key_stephen</span><span class="p">),</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Stephen"</span><span class="p">}</span>
+<span class="nb">str</span><span class="p">(</span><span class="n">stephen_info</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>"{'pub_key': '(2701, 1993)', 'name': 'Stephen'}"</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">certificate</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">certificate</span><span class="p">[</span><span class="s2">"pub_key"</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+    <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="nb">hex</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key_CA</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">private_key_CA</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">stephen_info</span><span class="p">[</span><span class="s2">"pub_key"</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">certificate</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+    <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="nb">hex</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key_CA</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="n">private_key_CA</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">stephen_info</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">certificate</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'pub_key': b'MHgxMDVlNAoweGNhMTYKMHg0MjkyCjB4ODdlOAoweDY0NzcKMHhiZGJjCjB4YWMwOAoweDY0NzcKMHhlZjEzCjB4ZWYxMwoweDEzMDIKMHgzOGI3',
+ 'name': b'MHg5MTA3CjB4ZTBjYQoweGFiNWMKMHhjN2Y1CjB4MmM4CjB4YWI1YwoweDdiMjM='}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">message_to_Richael</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"cert"</span><span class="p">:</span> <span class="n">certificate</span><span class="p">,</span> <span class="s2">"msg"</span><span class="p">:</span> <span class="n">encry_msg</span><span class="p">,</span> <span class="s2">"signature"</span><span class="p">:</span> <span class="n">encry_sig</span><span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Step 1: download CA's public key</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"CA Public Key: "</span><span class="p">,</span> <span class="n">public_key_CA</span><span class="p">)</span>
+
+<span class="c1"># Step 2: verify Stephen's certificate with CA's public key</span>
+<span class="n">public_key_st</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">public_key_CA</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key_CA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"cert"</span><span class="p">][</span><span class="s2">"pub_key"</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">public_key_st</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">public_key_st</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Stepen Public Key: "</span><span class="p">,</span> <span class="n">public_key_st</span><span class="p">)</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">public_key_CA</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key_CA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"cert"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CA Public Key:  (68513, 64123)
+Stepen Public Key:  (2701, 1993)
+Stephen
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># RSA decode msg with Richael's private key</span>
+<span class="n">decry_msg</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">private_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"msg"</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">decry_msg</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_msg</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decry_msg</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Hello Richael. Let's meet at 6:25 pm tomorrow at the airport Gate5, Terminal 2 --Stephen :)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">decry_sig</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">**</span> <span class="n">public_key_st</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="n">public_key_st</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_to_Richael</span><span class="p">[</span><span class="s2">"signature"</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>22edc929d9211d1102f7af88b85ea472c9e64629074985cba94607526dff3029
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sha256</span><span class="p">(</span><span class="n">decry_msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">==</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">decry_sig</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now as to Joseph, if still wants to pretend to be Stephen, would have 3 ways to go:</p>
+<ol>
+<li>Go to CA and try to convence them that he is the real Stephen, to have his fake <strong>public</strong> key certified, or</li>
+<li>Manage to have access to CA's <strong>private</strong> key, so he can certify himself, or</li>
+<li>Become a CA.</li>
+</ol>
+<p>Well...</p>
 
 </div>
 </div>
