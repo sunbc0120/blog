@@ -2,18 +2,18 @@
 #
 # This config file is meant for settings that affect your whole blog.
 #
-# If you need help with YAML syntax, here are some quick references for you: 
+# If you need help with YAML syntax, here are some quick references for you:
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: fastpages
-description: An easy to use blogging platform with support for Jupyter Notebooks.
+title: SUN's Blog
+description: Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.
 github_username: sunbc0120
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "blog"
 
 # OPTIONAL: override baseurl and url if using a custom domain
-# Note: leave out the trailing / from this value. 
+# Note: leave out the trailing / from this value.
 url: "https://sunbc0120.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 ###########################################################
@@ -21,11 +21,11 @@ url: "https://sunbc0120.github.io" # the base hostname & protocol for your site,
 #
 #### Scenario One: If you do not have a Custom Domain #####
 #    -  if you are not using a custom domain, the baseurl *must* be set to your repo name
-# 
+#
 ####  Scenario Two: If you have a Custom Domain #####
 # 1. If your domain does NOT have a subpath, this leave this value as ""
-# 2. If your domain does have a subpath, you must preceed the value with a / and NOT have a / at the end.  
-#      For example: 
+# 2. If your domain does have a subpath, you must preceed the value with a / and NOT have a / at the end.
+#      For example:
 #           "" is valid
 #           "/blog"        is valid
 #            "/blog/site/" is invalid  ( / at the end)
@@ -39,26 +39,30 @@ baseurl: "/blog" # the subpath of your site, e.g. "/blog".
 # Github and twitter are optional:
 minima:
   social_links:
-    twitter: fastdotai
-    github: fastai
+    linkedin: sunbc0120
+    github: sunbc0120
+    stackoverflow: "3317548"
+    twitter: sunbc0120
+    youtube: sunbc0120
+    instagram: sunbc0120
 
 # Set this to true to get LaTeX math equation support
-use_math: 
+use_math: true
 
 # Set this to true to display the summary of your blog post under your title on the Home page.
 show_description: true
 
 # Set this to true to display image previews on home page, if they exist
-show_image: false
+show_image: true
 
 # Set this to true to turn on annotations with hypothes.is (https://web.hypothes.is/)
-annotations: false
+annotations: true
 
 # Set this to true to display tags on each post
 show_tags: true
 
 # Add your Google Analytics ID here if you have one and want to use it
-google_analytics: 
+google_analytics: UA-51116273-3
 
 exclude:
   - docker-compose.yml
@@ -94,6 +98,7 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jemoji
+  - jekyll-spaceship
 
 # See https://jekyllrb.com/docs/pagination/
 # For pagination to work, you cannot have index.md at the root of your repo, instead you must rename this file to index.html
@@ -103,7 +108,7 @@ paginate_path: /page:num/
 remote_theme: jekyll/minima
 
 titles_from_headings:
-  enabled:     true
+  enabled: true
   strip_title: true
   collections: true
 
@@ -116,7 +121,6 @@ kramdown:
   hard_wrap: false
   syntax_highlighter: rouge
 
-# to limit size of xml as it can grow quite large.
 feed:
   posts_limit: 5 #default posts_limit: 10
   excerpt_only: true
