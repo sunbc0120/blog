@@ -382,7 +382,7 @@ sequenceDiagram
 
 <p>In short, at Terminal to the local, do</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;:localhost:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;\:localhost\:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
 </code></pre></div></div>
 
 <p>Now you shall use your local browser and go to <code class="language-plaintext highlighter-rouge">http://localhost:&lt;local-port-you-just-specified&gt;</code>. If you can create a new Jupyter notebook, select your Python kernel, and run successfully <code class="language-plaintext highlighter-rouge">import &lt;you-python-module-name&gt;</code>, then we’ve completed <strong>Step 3</strong>.</p>
