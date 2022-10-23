@@ -19,7 +19,7 @@
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2020-09-20T00:00:00-05:00">
 <script type="application/ld+json">
-{"datePublished":"2020-09-20T00:00:00-05:00","url":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html","@type":"BlogPosting","dateModified":"2020-09-20T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html"},"headline":"Why I Like PyCharm, Especially its Pro Edition","description":"Setting up PyCharm Professional Edition for Remote Python Development.","@context":"https://schema.org"}</script>
+{"headline":"Why I Like PyCharm, Especially its Pro Edition","dateModified":"2020-09-20T00:00:00-05:00","url":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html","datePublished":"2020-09-20T00:00:00-05:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://sunbc0120.github.io/blog/markdown/python/boilerplate/2020/09/20/pycharm.html"},"description":"Setting up PyCharm Professional Edition for Remote Python Development.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css">
 <link type="application/atom+xml" rel="alternate" href="https://sunbc0120.github.io/blog/feed.xml" title="SUN's Blog">
@@ -382,7 +382,7 @@ sequenceDiagram
 
 <p>In short, at Terminal to the local, do</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;\:localhost\:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-i</span> &lt;path-to-private-key&gt;.pem <span class="nt">-N</span> <span class="nt">-f</span> <span class="nt">-L</span> localhost:&lt;local-port-you-prefer-e.g.-8888&gt;:localhost:&lt;remote-port-shown-on-previous-terminal&gt; &lt;remote-user-name-e.g.-ubuntu&gt;@&lt;remote-hostname-e.g.-57.249.126.45&gt;
 </code></pre></div></div>
 
 <p>Now you shall use your local browser and go to <code class="language-plaintext highlighter-rouge">http://localhost:&lt;local-port-you-just-specified&gt;</code>. If you can create a new Jupyter notebook, select your Python kernel, and run successfully <code class="language-plaintext highlighter-rouge">import &lt;you-python-module-name&gt;</code>, then we’ve completed <strong>Step 3</strong>.</p>
