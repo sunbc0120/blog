@@ -11,19 +11,12 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
 >
   <div class="about-shell">
     <div class="term-window" id="about-terminal">
-      <!-- Single-Tab Terminal Chrome -->
+      <!-- Single-Window Terminal Titlebar -->
       <div class="term-chrome">
-        <div class="term-chrome-left">
-          <div class="term-lights" aria-hidden="true">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-
-          <div class="term-tab active">
-            <span class="tab-idx">01</span>
-            <span>mcp://sun.blog/about</span>
-          </div>
+        <div class="term-lights" aria-hidden="true">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
         </div>
 
         <div class="term-tty-meta">zsh &middot; utf-8 &middot; tty0</div>
@@ -301,23 +294,15 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.55rem 1.1rem 0;
+    padding: 0.72rem 1.15rem;
     background: var(--t-chrome);
     border-bottom: 1px solid var(--t-border-soft);
-    flex-wrap: wrap;
-  }
-
-  .term-chrome-left {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.85rem;
   }
 
   .term-lights {
     display: inline-flex;
     align-items: center;
     gap: 0.42rem;
-    padding-bottom: 0.55rem;
   }
 
   .dot {
@@ -330,35 +315,10 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   .dot-yellow { background: #f59e0b; }
   .dot-green { background: #10b981; }
 
-  .term-tab.active {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.42rem;
-    padding: 0.46rem 0.92rem;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--t-fg);
-    background: var(--t-bg);
-    border: 1px solid var(--t-border-soft);
-    border-bottom: none;
-    border-radius: 8px 8px 0 0;
-    white-space: nowrap;
-  }
-
-  .tab-idx {
-    font-size: 0.68rem;
-    padding: 0.05rem 0.34rem;
-    border-radius: 4px;
-    background: var(--t-cyan-bg);
-    color: var(--t-cyan);
-  }
-
   .term-tty-meta {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.72rem;
     color: var(--t-muted);
-    padding-bottom: 0.55rem;
   }
 
   .term-viewport {
@@ -756,9 +716,6 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     .kv-row {
       grid-template-columns: 1fr;
       gap: 0.2rem;
-    }
-    .term-tty-meta {
-      display: none;
     }
   }
 </style>
