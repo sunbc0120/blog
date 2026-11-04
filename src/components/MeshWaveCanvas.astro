@@ -1,0 +1,396 @@
+---
+/**
+ * Cursor-Trajectory Dynamic Mesh-Net Wave Canvas
+ * Solves a damped 2D wave equation (5-point Laplacian stencil) coupled with
+ * Hookean lateral shear along the mouse cursor's exact trajectory segment.
+ * Adapts automatically to Day & Night themes and pauses when hidden.
+ */
+---
+
+<canvas id="mesh-wave-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #mesh-wave-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    display: block;
+  }
+</style>
+
+<script>
+  function initMeshWave() {
+    const canvas = document.getElementById('mesh-wave-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    const SPACING = 42;
+    const WAVE_C2 = 0.21;        // 2D Courant-stable wave speed squared (< 0.5 limit)
+    const RESTORE_Z = 0.016;     // Klein-Gordon elastic restoring tension
+    const DAMP_Z = 0.968;        // Wave energy dissipation per frame
+    const SPRING_XY = 0.065;     // Lateral Hookean spring constant
+    const DAMP_XY = 0.86;        // Lateral shear damping
+    const WAKE_RADIUS = 135;     // Cursor wake excitation radius (px)
+
+    let width = 0;
+    let height = 0;
+    let cols = 0;
+    let rows = 0;
+    let dpr = 1;
+
+    // Flat typed arrays for zero-GC 60/120fps wave & spring simulation
+    let restX = new Float32Array(0);
+    let restY = new Float32Array(0);
+    let zCurr = new Float32Array(0);
+    let vz = new Float32Array(0);
+    let dispX = new Float32Array(0);
+    let dispY = new Float32Array(0);
+    let velX = new Float32Array(0);
+    let velY = new Float32Array(0);
+    let projX = new Float32Array(0);
+    let projY = new Float32Array(0);
+    let energy = new Float32Array(0);
+
+    const pointer = {
+      x: -9999,
+      y: -9999,
+      prevX: -9999,
+      prevY: -9999,
+      vx: 0,
+      vy: 0,
+      active: false,
+      movedThisFrame: false,
+    };
+
+    function getPalette() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      return isDark
+        ? {
+            baseR: 148,
+            baseG: 163,
+            baseB: 184,
+            baseAlpha: 0.06,
+            waveR: 56,
+            waveG: 189,
+            waveB: 248,   // #38BDF8 sky-cyan
+            crestR: 16,
+            crestG: 185,
+            crestB: 129,  // #10B981 emerald
+            edgeScale: 0.46,
+            nodeScale: 0.62,
+          }
+        : {
+            baseR: 71,
+            baseG: 85,
+            baseB: 105,
+            baseAlpha: 0.05,
+            waveR: 15,
+            waveG: 76,
+            waveB: 129,   // #0F4C81 steel-navy
+            crestR: 5,
+            crestG: 150,
+            crestB: 105,  // #059669 emerald
+            edgeScale: 0.30,
+            nodeScale: 0.42,
+          };
+    }
+
+    let palette = getPalette();
+    new MutationObserver(() => {
+      palette = getPalette();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    function rebuildGrid() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas!.width = Math.floor(width * dpr);
+      canvas!.height = Math.floor(height * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      cols = Math.ceil(width / SPACING) + 4;
+      rows = Math.ceil(height / SPACING) + 4;
+      const total = cols * rows;
+
+      restX = new Float32Array(total);
+      restY = new Float32Array(total);
+      zCurr = new Float32Array(total);
+      vz = new Float32Array(0);
+      vz = new Float32Array(total);
+      dispX = new Float32Array(total);
+      dispY = new Float32Array(total);
+      velX = new Float32Array(total);
+      velY = new Float32Array(total);
+      projX = new Float32Array(total);
+      projY = new Float32Array(total);
+      energy = new Float32Array(total);
+
+      const offsetX = -SPACING * 1.5;
+      const offsetY = -SPACING * 1.5;
+      let idx = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          restX[idx] = offsetX + c * SPACING;
+          restY[idx] = offsetY + r * SPACING;
+          idx++;
+        }
+      }
+    }
+
+    // Inject continuous wave impulse & lateral shear along a cursor trajectory segment
+    function injectTrajectorySegment(x0: number, y0: number, x1: number, y1: number, boost = 1) {
+      const segDx = x1 - x0;
+      const segDy = y1 - y0;
+      const dist = Math.hypot(segDx, segDy);
+      const steps = Math.max(1, Math.min(12, Math.ceil(dist / 18)));
+      const speedImpulse = Math.min(9.5, (1.4 + dist * 0.14) * boost);
+      const rSqMax = WAKE_RADIUS * WAKE_RADIUS;
+
+      const offsetX = -SPACING * 1.5;
+      const offsetY = -SPACING * 1.5;
+
+      for (let s = 1; s <= steps; s++) {
+        const t = s / steps;
+        const px = x0 + segDx * t;
+        const py = y0 + segDy * t;
+
+        const cMin = Math.max(1, Math.floor((px - WAKE_RADIUS - offsetX) / SPACING));
+        const cMax = Math.min(cols - 2, Math.ceil((px + WAKE_RADIUS - offsetX) / SPACING));
+        const rMin = Math.max(1, Math.floor((py - WAKE_RADIUS - offsetY) / SPACING));
+        const rMax = Math.min(rows - 2, Math.ceil((py + WAKE_RADIUS - offsetY) / SPACING));
+
+        for (let r = rMin; r <= rMax; r++) {
+          const rowOff = r * cols;
+          for (let c = cMin; c <= cMax; c++) {
+            const i = rowOff + c;
+            const dx = restX[i] - px;
+            const dy = restY[i] - py;
+            const dSq = dx * dx + dy * dy;
+            if (dSq < rSqMax) {
+              const d = Math.sqrt(dSq);
+              const q = 1 - d / WAKE_RADIUS;
+              // Mexican-hat / Kelvin wake profile: trough under cursor, crest ring around it
+              const profile = Math.cos((d / WAKE_RADIUS) * Math.PI * 1.35) * q * q;
+              vz[i] += (speedImpulse / steps) * profile;
+
+              // Shear drag along cursor trajectory + gentle radial push
+              const invD = d > 0.5 ? 1 / d : 0;
+              velX[i] += ((segDx * 0.11 + dx * invD * 0.9) * q * q) / steps;
+              velY[i] += ((segDy * 0.11 + dy * invD * 0.9) * q * q) / steps;
+            }
+          }
+        }
+      }
+    }
+
+    window.addEventListener('resize', rebuildGrid, { passive: true });
+
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        if (!pointer.active) {
+          pointer.prevX = e.clientX;
+          pointer.prevY = e.clientY;
+          pointer.x = e.clientX;
+          pointer.y = e.clientY;
+          pointer.active = true;
+          injectTrajectorySegment(e.clientX, e.clientY, e.clientX + 0.5, e.clientY + 0.5, 0.8);
+          return;
+        }
+        pointer.prevX = pointer.x;
+        pointer.prevY = pointer.y;
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+        const dx = pointer.x - pointer.prevX;
+        const dy = pointer.y - pointer.prevY;
+        pointer.vx = pointer.vx * 0.5 + dx * 0.5;
+        pointer.vy = pointer.vy * 0.5 + dy * 0.5;
+        pointer.movedThisFrame = true;
+        injectTrajectorySegment(pointer.prevX, pointer.prevY, pointer.x, pointer.y, 1);
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      'pointerdown',
+      (e) => {
+        pointer.active = true;
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+        injectTrajectorySegment(e.clientX, e.clientY, e.clientX, e.clientY, 2.8);
+      },
+      { passive: true }
+    );
+
+    document.addEventListener('pointerleave', () => {
+      pointer.active = false;
+      pointer.x = -9999;
+      pointer.y = -9999;
+    });
+
+    let rafId = 0;
+    let running = true;
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      } else if (!running) {
+        running = true;
+        rafId = requestAnimationFrame(step);
+      }
+    });
+
+    function step(now: number) {
+      if (!running) return;
+      ctx!.clearRect(0, 0, width, height);
+
+      const tSec = now * 0.001;
+      pointer.vx *= 0.9;
+      pointer.vy *= 0.9;
+
+      // Subtle hover lens breathing when cursor rests smoothly on page
+      if (pointer.active && !pointer.movedThisFrame) {
+        const hoverPulse = Math.sin(tSec * 3.2) * 0.22;
+        injectTrajectorySegment(pointer.x, pointer.y, pointer.x, pointer.y, hoverPulse);
+      }
+      pointer.movedThisFrame = false;
+
+      // 1. Symplectic 2D Wave PDE velocity update (5-point Laplacian on interior nodes)
+      for (let r = 1; r < rows - 1; r++) {
+        const rowOff = r * cols;
+        for (let c = 1; c < cols - 1; c++) {
+          const i = rowOff + c;
+          const lapZ =
+            zCurr[i - 1] +
+            zCurr[i + 1] +
+            zCurr[i - cols] +
+            zCurr[i + cols] -
+            4 * zCurr[i];
+          vz[i] = (vz[i] + lapZ * WAVE_C2 - zCurr[i] * RESTORE_Z) * DAMP_Z;
+        }
+      }
+
+      // 2. Integrate wave elevation, lateral spring shear, & 2.5D mesh projection
+      const total = cols * rows;
+      for (let i = 0; i < total; i++) {
+        let z = zCurr[i] + vz[i];
+        if (z > 40) z = 40;
+        else if (z < -40) z = -40;
+        zCurr[i] = z;
+
+        velX[i] = (velX[i] - dispX[i] * SPRING_XY) * DAMP_XY;
+        velY[i] = (velY[i] - dispY[i] * SPRING_XY) * DAMP_XY;
+        let dx = dispX[i] + velX[i];
+        let dy = dispY[i] + velY[i];
+        if (dx > 28) dx = 28;
+        else if (dx < -28) dx = -28;
+        if (dy > 28) dy = 28;
+        else if (dy < -28) dy = -28;
+        dispX[i] = dx;
+        dispY[i] = dy;
+      }
+
+      for (let r = 0; r < rows; r++) {
+        const rowOff = r * cols;
+        for (let c = 0; c < cols; c++) {
+          const i = rowOff + c;
+          const rx = restX[i];
+          const ry = restY[i];
+
+          // Gentle ambient carrier undulation + dynamic PDE wave height
+          const ambient = Math.sin(rx * 0.0042 + tSec * 0.85) * Math.cos(ry * 0.0042 + tSec * 0.65) * 1.7;
+          const z = zCurr[i] + ambient;
+
+          // Finite-difference slope refracts mesh vertices horizontally for authentic 3D wave net look
+          const zL = c > 0 ? zCurr[i - 1] : zCurr[i];
+          const zR = c < cols - 1 ? zCurr[i + 1] : zCurr[i];
+          const zU = r > 0 ? zCurr[i - cols] : zCurr[i];
+          const zD = r < rows - 1 ? zCurr[i + cols] : zCurr[i];
+          const slopeX = (zR - zL) * 0.34;
+          const slopeY = (zD - zU) * 0.34;
+
+          projX[i] = rx + dispX[i] - slopeX;
+          projY[i] = ry + dispY[i] - z * 0.78 - slopeY;
+
+          const waveMag = Math.abs(zCurr[i]) / 13.5;
+          const shearMag = Math.hypot(dispX[i], dispY[i]) / 15;
+          const slopeMag = Math.hypot(slopeX, slopeY) / 4.5;
+          energy[i] = Math.min(1, Math.max(waveMag, shearMag, slopeMag));
+        }
+      }
+
+      // 3. Batch-render resting wireframe mesh lattice in a single fast stroke
+      ctx!.lineWidth = 1;
+      ctx!.strokeStyle = `rgba(${palette.baseR}, ${palette.baseG}, ${palette.baseB}, ${palette.baseAlpha})`;
+      ctx!.beginPath();
+      for (let r = 0; r < rows; r++) {
+        const rowOff = r * cols;
+        ctx!.moveTo(projX[rowOff], projY[rowOff]);
+        for (let c = 1; c < cols; c++) {
+          ctx!.lineTo(projX[rowOff + c], projY[rowOff + c]);
+        }
+      }
+      for (let c = 0; c < cols; c++) {
+        ctx!.moveTo(projX[c], projY[c]);
+        for (let r = 1; r < rows; r++) {
+          ctx!.lineTo(projX[r * cols + c], projY[r * cols + c]);
+        }
+      }
+      ctx!.stroke();
+
+      // 4. Render energized wave-front mesh edges, triangulated facets, & glowing vertices
+      for (let r = 0; r < rows - 1; r++) {
+        const rowOff = r * cols;
+        for (let c = 0; c < cols - 1; c++) {
+          const i = rowOff + c;
+          const e = energy[i];
+          if (e < 0.035) continue;
+
+          const x = projX[i];
+          const y = projY[i];
+          const right = i + 1;
+          const down = i + cols;
+          const diag = down + 1;
+
+          const mix = Math.min(1, e * 1.15);
+          const cr = Math.round(palette.waveR + (palette.crestR - palette.waveR) * mix);
+          const cg = Math.round(palette.waveG + (palette.crestG - palette.waveG) * mix);
+          const cb = Math.round(palette.waveB + (palette.crestB - palette.waveB) * mix);
+          const edgeAlpha = Math.min(palette.edgeScale, e * palette.edgeScale).toFixed(3);
+
+          ctx!.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, ${edgeAlpha})`;
+          ctx!.lineWidth = 1 + e * 0.65;
+          ctx!.beginPath();
+          ctx!.moveTo(x, y);
+          ctx!.lineTo(projX[right], projY[right]);
+          ctx!.moveTo(x, y);
+          ctx!.lineTo(projX[down], projY[down]);
+          if (e > 0.2) {
+            ctx!.moveTo(x, y);
+            ctx!.lineTo(projX[diag], projY[diag]);
+          }
+          ctx!.stroke();
+
+          ctx!.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${Math.min(palette.nodeScale, e * palette.nodeScale).toFixed(3)})`;
+          ctx!.beginPath();
+          ctx!.arc(x, y, 1.05 + e * 1.45, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+      }
+
+      rafId = requestAnimationFrame(step);
+    }
+
+    rebuildGrid();
+    rafId = requestAnimationFrame(step);
+  }
+
+  initMeshWave();
+</script>

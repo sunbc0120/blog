@@ -1,0 +1,262 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  categories?: string[];
+  toc?: boolean;
+  interactive?: boolean;
+  notebookSource?: string;
+  headings?: MarkdownHeading[];
+  readingMinutes?: number;
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  categories = [],
+  toc = true,
+  interactive = false,
+  notebookSource,
+  headings = [],
+  readingMinutes = 5,
+} = Astro.props;
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+
+const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const showToc = toc && filteredHeadings.length >= 2;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+  timeZone: 'UTC',
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <div class={`article-grid ${showToc ? 'has-toc' : ''}`}>
+    <article>
+      <a href={`${base}/`} class="article-back">&larr; Back to all notes</a>
+
+      <header class="article-header">
+        <div class="article-meta">
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+          <span>&middot;</span>
+          <span>{readingMinutes} min read</span>
+          {interactive && <span class="badge-interactive">Interactive Widget</span>}
+          {notebookSource && <span class="badge-notebook">Jupyter Notebook</span>}
+        </div>
+        <h1 class="article-title">{title}</h1>
+        <p class="article-subtitle">{description}</p>
+        {categories.length > 0 && (
+          <div class="post-card-tags" style="margin-top: 1rem;">
+            {categories.map((cat) => (
+              <span class="tag-pill">#{cat}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <div class="prose" id="article-prose">
+        <slot />
+      </div>
+    </article>
+
+    {showToc && (
+      <aside class="toc-aside" aria-label="Table of contents">
+        <div class="toc-sticky">
+          <h2 class="toc-heading">On This Page</h2>
+          <ul class="toc-list" id="toc-list">
+            {filteredHeadings.map((h) => (
+              <li class={`toc-depth-${h.depth}`}>
+                <a href={`#${h.slug}`} data-toc-slug={h.slug}>
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    )}
+  </div>
+
+  <!-- Lightbox Modal for Diagrams & Screenshots -->
+  <div class="lightbox-backdrop" id="img-lightbox" role="dialog" aria-modal="true" aria-label="Expanded figure">
+    <img id="img-lightbox-target" src="" alt="" />
+  </div>
+
+  <script>
+    // 1. Copy-code header bars for Shiki code blocks
+    function enhanceCodeBlocks() {
+      const blocks = document.querySelectorAll<HTMLPreElement>('#article-prose pre.astro-code');
+      blocks.forEach((pre) => {
+        if (pre.parentElement?.classList.contains('code-block-wrap')) return;
+        const lang = pre.getAttribute('data-language') || 'text';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrap';
+
+        const bar = document.createElement('div');
+        bar.className = 'code-block-bar';
+
+        const label = document.createElement('span');
+        label.textContent = lang;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-code-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', async () => {
+          const text = pre.innerText || pre.textContent || '';
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = '✓ Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 1800);
+          } catch {}
+        });
+
+        bar.appendChild(label);
+        bar.appendChild(btn);
+        pre.parentNode?.insertBefore(wrapper, pre);
+        wrapper.appendChild(bar);
+        wrapper.appendChild(pre);
+      });
+    }
+
+    // 2. Adaptive Day/Night Mermaid rendering (lazy-loaded only when diagrams exist)
+    async function renderMermaidDiagrams() {
+      const stages = document.querySelectorAll<HTMLElement>('.mermaid-stage[data-mermaid-src]');
+      if (!stages.length) return;
+
+      const { default: mermaid } = await import('mermaid');
+
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'loose',
+        theme: isDark ? 'dark' : 'neutral',
+        fontFamily: '"Inter", "IBM Plex Sans", -apple-system, sans-serif',
+        themeVariables: isDark
+          ? {
+              darkMode: true,
+              background: '#111720',
+              primaryColor: '#18212E',
+              primaryTextColor: '#E6EDF3',
+              primaryBorderColor: '#38BDF8',
+              lineColor: '#94A3B8',
+              textColor: '#E6EDF3',
+              secondaryColor: '#141C27',
+              tertiaryColor: '#18212E',
+              noteBkgColor: '#141C27',
+              noteTextColor: '#E6EDF3',
+              noteBorderColor: '#10B981',
+              actorBkg: '#18212E',
+              actorBorder: '#38BDF8',
+              actorTextColor: '#E6EDF3',
+              actorLineColor: '#475569',
+              signalColor: '#94A3B8',
+              signalTextColor: '#E6EDF3',
+              labelBoxBkgColor: '#18212E',
+              labelBoxBorderColor: '#38BDF8',
+              labelTextColor: '#E6EDF3',
+              loopTextColor: '#E6EDF3',
+            }
+          : {
+              darkMode: false,
+              background: '#FFFFFF',
+              primaryColor: '#F8FAFC',
+              primaryTextColor: '#0F172A',
+              primaryBorderColor: '#0F4C81',
+              lineColor: '#475569',
+              textColor: '#0F172A',
+              secondaryColor: '#F8FAFC',
+              tertiaryColor: '#F1F5F9',
+              noteBkgColor: '#F0FDF4',
+              noteTextColor: '#0F172A',
+              noteBorderColor: '#059669',
+              actorBkg: '#F8FAFC',
+              actorBorder: '#0F4C81',
+              actorTextColor: '#0F172A',
+              actorLineColor: '#94A3B8',
+              signalColor: '#475569',
+              signalTextColor: '#0F172A',
+            },
+      });
+
+      let idx = 0;
+      for (const stage of stages) {
+        const src = stage.getAttribute('data-mermaid-src');
+        if (!src) continue;
+        try {
+          const id = `mermaid-svg-${Date.now()}-${idx++}`;
+          const { svg } = await mermaid.render(id, src);
+          stage.innerHTML = svg;
+        } catch (err) {
+          console.error('Mermaid render error:', err);
+        }
+      }
+    }
+
+    // 3. Sticky TOC active heading observer
+    function initTocObserver() {
+      const links = document.querySelectorAll<HTMLAnchorElement>('#toc-list a[data-toc-slug]');
+      if (!links.length) return;
+      const headingEls = Array.from(links)
+        .map((a) => document.getElementById(a.dataset.tocSlug || ''))
+        .filter((el): el is HTMLElement => Boolean(el));
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              links.forEach((a) => a.classList.toggle('active', a.dataset.tocSlug === id));
+            }
+          }
+        },
+        { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+      );
+      headingEls.forEach((h) => observer.observe(h));
+    }
+
+    // 4. Click-to-zoom figure lightbox
+    function initLightbox() {
+      const modal = document.getElementById('img-lightbox');
+      const target = document.getElementById('img-lightbox-target') as HTMLImageElement | null;
+      if (!modal || !target) return;
+
+      document.querySelectorAll<HTMLImageElement>('#article-prose img').forEach((img) => {
+        img.addEventListener('click', () => {
+          target.src = img.src;
+          target.alt = img.alt;
+          modal.classList.add('open');
+        });
+      });
+
+      modal.addEventListener('click', () => modal.classList.remove('open'));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') modal.classList.remove('open');
+      });
+    }
+
+    enhanceCodeBlocks();
+    renderMermaidDiagrams();
+    initTocObserver();
+    initLightbox();
+    new MutationObserver(() => {
+      renderMermaidDiagrams();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  </script>
+</BaseLayout>

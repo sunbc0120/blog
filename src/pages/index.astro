@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const allCategories = Array.from(
+  new Set(allPosts.flatMap((post) => post.data.categories))
+).sort();
+
+function estimateMinutes(body?: string) {
+  if (!body) return 4;
+  const words = body.trim().split(/\s+/).length;
+  return Math.max(2, Math.round(words / 220));
+}
+---
+
+<BaseLayout title="SUN's Blog">
+  <div class="narrow-shell">
+    <section class="masthead">
+      <span class="masthead-kicker">Systems &middot; GPU Computing &middot; Applied ML</span>
+      <h1>SUN's Blog</h1>
+      <p class="masthead-desc">
+        Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.
+      </p>
+    </section>
+
+    {allCategories.length > 0 && (
+      <div class="topic-filter-bar" role="toolbar" aria-label="Filter notes by topic">
+        <button type="button" class="filter-chip active" data-filter="all">all</button>
+        {allCategories.map((cat) => (
+          <button type="button" class="filter-chip" data-filter={cat}>
+            #{cat}
+          </button>
+        ))}
+      </div>
+    )}
+
+    <div class="post-list" id="post-list">
+      {allPosts.map((post) => {
+        const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: '2-digit',
+          timeZone: 'UTC',
+        });
+        const mins = estimateMinutes(post.body);
+        return (
+          <a
+            href={`${base}/posts/${post.id}/`}
+            class="post-card"
+            data-categories={post.data.categories.join(',')}
+          >
+            <div class="post-card-meta">
+              <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+              <span>&middot;</span>
+              <span>{mins} min read</span>
+              {post.data.interactive && <span class="badge-interactive">Interactive Widget</span>}
+              {post.data.notebookSource && <span class="badge-notebook">Jupyter Notebook</span>}
+            </div>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            {post.data.categories.length > 0 && (
+              <div class="post-card-tags">
+                {post.data.categories.map((cat) => (
+                  <span class="tag-pill">#{cat}</span>
+                ))}
+              </div>
+            )}
+          </a>
+        );
+      })}
+    </div>
+  </div>
+
+  <script>
+    const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip[data-filter]');
+    const cards = document.querySelectorAll<HTMLElement>('.post-card[data-categories]');
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.filter || 'all';
+        chips.forEach((c) => c.classList.toggle('active', c === chip));
+        cards.forEach((card) => {
+          const cats = (card.dataset.categories || '').split(',').filter(Boolean);
+          const show = filter === 'all' || cats.includes(filter);
+          card.style.display = show ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
+</BaseLayout>
