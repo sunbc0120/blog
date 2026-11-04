@@ -11,71 +11,33 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
 >
   <div class="about-shell">
     <div class="term-window" id="about-terminal">
-      <!-- Terminal Chrome & Tab Strip -->
+      <!-- Single-Tab Terminal Chrome -->
       <div class="term-chrome">
-        <div class="term-lights" aria-hidden="true">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
-        </div>
+        <div class="term-chrome-left">
+          <div class="term-lights" aria-hidden="true">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
 
-        <div class="term-tabs" role="tablist" aria-label="Bio terminal tabs">
-          <button
-            type="button"
-            role="tab"
-            aria-selected="true"
-            aria-controls="panel-card"
-            id="tab-card"
-            class="term-tab active"
-            data-tab="card"
-          >
-            <span class="tab-idx">1</span>
-            <span>mcp-card.json</span>
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="panel-stack"
-            id="tab-stack"
-            class="term-tab"
-            data-tab="stack"
-          >
-            <span class="tab-idx">2</span>
-            <span>roofline-stack.sh</span>
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="panel-log"
-            id="tab-log"
-            class="term-tab"
-            data-tab="log"
-          >
-            <span class="tab-idx">3</span>
-            <span>git-log</span>
-          </button>
+          <div class="term-tab active">
+            <span class="tab-idx">01</span>
+            <span>mcp://sun.blog/about</span>
+          </div>
         </div>
 
         <div class="term-tty-meta">zsh &middot; utf-8 &middot; tty0</div>
       </div>
 
-      <!-- Terminal Viewport -->
+      <!-- Single Scrollable Terminal Buffer -->
       <div class="term-viewport" id="term-viewport">
-        <!-- TAB 1: MCP ENGINEER MODEL CARD -->
-        <section
-          id="panel-card"
-          role="tabpanel"
-          aria-labelledby="tab-card"
-          class="term-panel active"
-          data-panel="card"
-        >
+        <!-- 1. mcp inspect --card mcp://sun.blog/about -->
+        <section id="sec-about" class="term-block">
           <div class="cmd-line">
             <span class="t-sigil">~$</span>
             <span class="t-cmd">mcp inspect</span>
             <span class="t-flag">--card</span>
-            <span class="t-arg">mcp://sun.blog/baichuan-sun</span>
+            <span class="t-arg">mcp://sun.blog/about</span>
           </div>
 
           <div class="mcp-banner">
@@ -84,7 +46,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
                 <span class="t-badge-emerald">MCP CARD v2026</span>
                 <span class="t-badge-cyan">APPLIED AI &amp; GPU SYSTEMS</span>
               </div>
-              <span class="t-comment">// status: active &middot; melbourne, au (UTC+11)</span>
+              <span class="t-comment">status: active &middot; melbourne, au (UTC+11)</span>
             </div>
             <h1 class="mcp-name">Baichuan Sun, PhD</h1>
             <p class="mcp-tagline">
@@ -125,14 +87,18 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
               </span>
             </div>
           </div>
+        </section>
 
-          <div class="cmd-line" style="margin-top: 1.75rem;">
+        <!-- 2. mcp inspect --card mcp://sun.blog/philosophy -->
+        <section id="sec-philosophy" class="term-block">
+          <div class="cmd-line">
             <span class="t-sigil">~$</span>
-            <span class="t-cmd">cat</span>
-            <span class="t-arg">~/philosophy.md</span>
+            <span class="t-cmd">mcp inspect</span>
+            <span class="t-flag">--card</span>
+            <span class="t-arg">mcp://sun.blog/philosophy</span>
           </div>
 
-          <div class="term-prose">
+          <div class="mcp-card-prose">
             <p>
               My training started in statistical mechanics, non-equilibrium thermodynamics, and molecular-scale simulation,
               long before LLMs ate the software world. Once you spend years debugging partition functions, energy landscapes,
@@ -146,93 +112,10 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
               This notebook is where I write down the clean mental models, proofs, and reproducible recipes after the dust settles.
             </p>
           </div>
-
-          <div class="cmd-line" style="margin-top: 1.6rem;">
-            <span class="t-sigil">~$</span>
-            <span class="t-cmd">mcp list-endpoints</span>
-            <span class="t-flag">--public</span>
-          </div>
-
-          <div class="endpoint-row">
-            <a href="https://github.com/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
-              <span class="ep-proto">git://</span>github.com/sunbc0120
-            </a>
-            <a href="https://www.linkedin.com/in/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
-              <span class="ep-proto">https://</span>linkedin.com/in/sunbc0120
-            </a>
-            <a href="https://stackoverflow.com/users/3317548" target="_blank" rel="noopener noreferrer" class="ep-pill">
-              <span class="ep-proto">so://</span>users/3317548
-            </a>
-            <a href={`${base}/rss.xml`} class="ep-pill">
-              <span class="ep-proto">feed://</span>rss.xml
-            </a>
-          </div>
         </section>
 
-        <!-- TAB 2: ROOFLINE & MATH STACK -->
-        <section
-          id="panel-stack"
-          role="tabpanel"
-          aria-labelledby="tab-stack"
-          class="term-panel"
-          data-panel="stack"
-          hidden
-        >
-          <div class="cmd-line">
-            <span class="t-sigil">~$</span>
-            <span class="t-cmd">./roofline-stack.sh</span>
-            <span class="t-flag">--verbose</span>
-          </div>
-
-          <div class="stack-grid">
-            <div class="stack-card">
-              <div class="stack-head">
-                <span class="t-cyan">[01] Silicon, Kernels &amp; Cluster Fabric</span>
-                <span class="t-emerald">COMPUTE / HBM</span>
-              </div>
-              <div class="meter-bar"><span style="width: 94%"></span></div>
-              <ul class="stack-list">
-                <li><strong>Memory &amp; Roofline:</strong> Arithmetic intensity budgeting, HBM3e capacity planning, KV-cache paging (<code>vLLM</code>), activation checkpointing vs. recompute trade-offs.</li>
-                <li><strong>Kernels &amp; Compilers:</strong> <code>PyTorch 2</code> (<code>torch.compile</code> / <code>Dynamo</code> / <code>Inductor</code>), custom <code>Triton</code> fused ops, <code>FP8</code> / <code>BF16</code> mixed-precision numerics, Perfetto &amp; Nsight profiling.</li>
-                <li><strong>Distributed Execution:</strong> <code>FSDP2</code>, tensor/pipeline parallelism, multi-NIC <code>GPUDirect-RDMA</code> &amp; <code>NCCL</code> topology tuning on <code>GKE</code> + <code>Ray</code>.</li>
-              </ul>
-            </div>
-
-            <div class="stack-card">
-              <div class="stack-head">
-                <span class="t-amber">[02] Post-Training &amp; Mathematical Foundations</span>
-                <span class="t-emerald">OPTIMIZATION</span>
-              </div>
-              <div class="meter-bar amber"><span style="width: 92%"></span></div>
-              <ul class="stack-list">
-                <li><strong>Reinforcement Learning:</strong> Synchronous &amp; asynchronous on-policy <code>GRPO</code> / <code>PPO</code>, group-normalized advantage estimation, KL divergence control, verifiable reward sandboxes.</li>
-                <li><strong>Physical &amp; Statistical Math:</strong> Statistical mechanics, Monte Carlo sampling, stochastic differential equations, convex/non-convex optimization, number-theoretic cryptography.</li>
-              </ul>
-            </div>
-
-            <div class="stack-card">
-              <div class="stack-head">
-                <span class="t-purple">[03] Agentic Systems &amp; Engineering Rigor</span>
-                <span class="t-emerald">ARCHITECTURE</span>
-              </div>
-              <div class="meter-bar purple"><span style="width: 90%"></span></div>
-              <ul class="stack-list">
-                <li><strong>Tooling &amp; State Isolation:</strong> Model Context Protocol (<code>MCP</code>) servers, copy-on-write (<code>CoW</code>) filesystem time-travel for reproducible agent evaluation, context-window offloading.</li>
-                <li><strong>Zero-Slop Rule:</strong> Every claim should trace back to a primary benchmark, an equation you can derive by hand, or a minimal script anyone can run.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- TAB 3: GIT LOG CAREER GRAPH -->
-        <section
-          id="panel-log"
-          role="tabpanel"
-          aria-labelledby="tab-log"
-          class="term-panel"
-          data-panel="log"
-          hidden
-        >
+        <!-- 3. git log --graph --abbrev-commit --decorate career -->
+        <section id="sec-career" class="term-block">
           <div class="cmd-line">
             <span class="t-sigil">~$</span>
             <span class="t-cmd">git log</span>
@@ -305,6 +188,30 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
           </div>
         </section>
 
+        <!-- 4. mcp list-endpoints --public -->
+        <section id="sec-endpoints" class="term-block">
+          <div class="cmd-line">
+            <span class="t-sigil">~$</span>
+            <span class="t-cmd">mcp list-endpoints</span>
+            <span class="t-flag">--public</span>
+          </div>
+
+          <div class="endpoint-row">
+            <a href="https://github.com/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">git://</span>github.com/sunbc0120
+            </a>
+            <a href="https://www.linkedin.com/in/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">https://</span>linkedin.com/in/sunbc0120
+            </a>
+            <a href="https://stackoverflow.com/users/3317548" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">so://</span>users/3317548
+            </a>
+            <a href={`${base}/rss.xml`} class="ep-pill">
+              <span class="ep-proto">feed://</span>rss.xml
+            </a>
+          </div>
+        </section>
+
         <!-- Interactive Command Output Log -->
         <div id="interactive-log" class="interactive-log" aria-live="polite"></div>
 
@@ -315,7 +222,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
             id="term-input"
             type="text"
             class="term-input"
-            placeholder="type a command (try: pwd, nvidia-smi, euler, stack, log, clear, help)..."
+            placeholder="type a command (try: pwd, nvidia-smi, euler, whoami, clear, help)..."
             spellcheck="false"
           />
           <button type="submit" class="term-run-btn">Run &crarr;</button>
@@ -326,8 +233,8 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
           <button type="button" class="q-chip" data-cmd="pwd">pwd</button>
           <button type="button" class="q-chip" data-cmd="nvidia-smi">nvidia-smi</button>
           <button type="button" class="q-chip" data-cmd="euler">euler</button>
-          <button type="button" class="q-chip" data-cmd="stack">stack</button>
-          <button type="button" class="q-chip" data-cmd="log">git log</button>
+          <button type="button" class="q-chip" data-cmd="whoami">whoami</button>
+          <button type="button" class="q-chip" data-cmd="help">help</button>
           <button type="button" class="q-chip" data-cmd="clear">clear</button>
         </div>
       </div>
@@ -345,7 +252,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
 
 <style>
   .about-shell {
-    max-width: 920px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
@@ -363,7 +270,6 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     --t-cyan: #0284c7;
     --t-cyan-bg: rgba(2, 132, 199, 0.1);
     --t-amber: #b45309;
-    --t-purple: #6d28d9;
     --t-str: #0f766e;
 
     border-radius: 14px;
@@ -387,7 +293,6 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     --t-cyan: #38bdf8;
     --t-cyan-bg: rgba(56, 189, 248, 0.14);
     --t-amber: #fbbf24;
-    --t-purple: #a78bfa;
     --t-str: #6ee7b7;
   }
 
@@ -396,10 +301,16 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.55rem 1rem 0;
+    padding: 0.55rem 1.1rem 0;
     background: var(--t-chrome);
     border-bottom: 1px solid var(--t-border-soft);
     flex-wrap: wrap;
+  }
+
+  .term-chrome-left {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.85rem;
   }
 
   .term-lights {
@@ -419,39 +330,20 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   .dot-yellow { background: #f59e0b; }
   .dot-green { background: #10b981; }
 
-  .term-tabs {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.3rem;
-    overflow-x: auto;
-  }
-
-  .term-tab {
+  .term-tab.active {
     display: inline-flex;
     align-items: center;
     gap: 0.42rem;
-    padding: 0.48rem 0.9rem;
+    padding: 0.46rem 0.92rem;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.78rem;
-    color: var(--t-muted);
-    background: transparent;
-    border: 1px solid transparent;
-    border-bottom: none;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    transition: color 0.15s ease, background 0.15s ease;
-    white-space: nowrap;
-  }
-
-  .term-tab:hover {
-    color: var(--t-fg);
-  }
-
-  .term-tab.active {
+    font-weight: 600;
     color: var(--t-fg);
     background: var(--t-bg);
-    border-color: var(--t-border-soft);
-    font-weight: 600;
+    border: 1px solid var(--t-border-soft);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    white-space: nowrap;
   }
 
   .tab-idx {
@@ -470,8 +362,17 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   }
 
   .term-viewport {
-    padding: 1.65rem 1.85rem 1.4rem;
+    padding: 1.7rem 1.9rem 1.45rem;
     color: var(--t-fg);
+  }
+
+  .term-block {
+    margin-bottom: 2.15rem;
+    scroll-margin-top: 5.5rem;
+  }
+
+  .term-block:last-of-type {
+    margin-bottom: 0.5rem;
   }
 
   .cmd-line {
@@ -481,7 +382,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     gap: 0.45rem;
     font-family: "JetBrains Mono", monospace;
     font-size: 0.86rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.95rem;
   }
 
   .t-sigil {
@@ -493,10 +394,6 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   .t-flag { color: var(--t-amber); }
   .t-arg { color: var(--t-fg); }
   .t-str { color: var(--t-str); }
-  .t-cyan { color: var(--t-cyan); }
-  .t-amber { color: var(--t-amber); }
-  .t-purple { color: var(--t-purple); }
-  .t-emerald { color: var(--t-emerald); }
   .t-comment {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.76rem;
@@ -508,7 +405,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     border-radius: 10px;
     border: 1px solid var(--t-border-soft);
     background: var(--t-surface);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.15rem;
   }
 
   .mcp-banner-top {
@@ -588,125 +485,29 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     color: var(--t-cyan);
   }
 
-  .term-prose p {
-    margin: 0 0 1rem;
-    font-size: 0.98rem;
-    line-height: 1.72;
-    color: var(--t-sub);
-  }
-
-  .term-prose p:last-child {
-    margin-bottom: 0;
-  }
-
-  .endpoint-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-  }
-
-  .ep-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.38rem 0.78rem;
-    border-radius: 7px;
-    border: 1px solid var(--t-border-soft);
-    background: var(--t-surface);
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.78rem;
-    color: var(--t-fg);
-    text-decoration: none;
-    transition: border-color 0.15s ease, transform 0.15s ease;
-  }
-
-  .ep-pill:hover {
-    border-color: var(--t-cyan);
-    color: var(--t-cyan);
-    text-decoration: none;
-    transform: translateY(-1px);
-  }
-
-  .ep-proto {
-    color: var(--t-emerald);
-    margin-right: 0.15rem;
-  }
-
-  /* Tab 2: Stack Cards */
-  .stack-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-  }
-
-  .stack-card {
-    padding: 1.15rem 1.3rem;
+  .mcp-card-prose {
+    padding: 1.15rem 1.35rem;
     border-radius: 10px;
     border: 1px solid var(--t-border-soft);
     background: var(--t-surface);
   }
 
-  .stack-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.83rem;
-    font-weight: 600;
-    margin-bottom: 0.55rem;
-  }
-
-  .meter-bar {
-    height: 5px;
-    border-radius: 999px;
-    background: var(--t-border-soft);
-    overflow: hidden;
-    margin-bottom: 0.85rem;
-  }
-
-  .meter-bar > span {
-    display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--t-cyan), var(--t-emerald));
-  }
-
-  .meter-bar.amber > span {
-    background: linear-gradient(90deg, var(--t-amber), var(--t-emerald));
-  }
-
-  .meter-bar.purple > span {
-    background: linear-gradient(90deg, var(--t-purple), var(--t-cyan));
-  }
-
-  .stack-list {
-    margin: 0;
-    padding-left: 1.2rem;
-    font-size: 0.92rem;
-    line-height: 1.65;
+  .mcp-card-prose p {
+    margin: 0 0 0.95rem;
+    font-size: 0.97rem;
+    line-height: 1.72;
     color: var(--t-sub);
   }
 
-  .stack-list li {
-    margin-bottom: 0.45rem;
-  }
-
-  .stack-list li:last-child {
+  .mcp-card-prose p:last-child {
     margin-bottom: 0;
   }
 
-  .stack-list code {
-    font-size: 0.82em;
-    padding: 0.1em 0.38em;
-    border-radius: 4px;
-    background: var(--t-cyan-bg);
-    color: var(--t-cyan);
-  }
-
-  /* Tab 3: Git Graph */
+  /* Career Git Graph */
   .git-graph {
     display: flex;
     flex-direction: column;
+    padding-left: 0.15rem;
   }
 
   .git-entry {
@@ -731,7 +532,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   }
 
   .git-entry:last-child .git-rail::before {
-    bottom: 55%;
+    bottom: 58%;
   }
 
   .git-node {
@@ -751,7 +552,11 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   }
 
   .git-body {
-    padding-bottom: 1.35rem;
+    padding-bottom: 1.3rem;
+  }
+
+  .git-entry:last-child .git-body {
+    padding-bottom: 0.15rem;
   }
 
   .git-meta {
@@ -796,9 +601,41 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     color: var(--t-sub);
   }
 
+  .endpoint-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .ep-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.38rem 0.78rem;
+    border-radius: 7px;
+    border: 1px solid var(--t-border-soft);
+    background: var(--t-surface);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--t-fg);
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .ep-pill:hover {
+    border-color: var(--t-cyan);
+    color: var(--t-cyan);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .ep-proto {
+    color: var(--t-emerald);
+    margin-right: 0.15rem;
+  }
+
   /* Interactive Output & Prompt */
   .interactive-log {
-    margin-top: 1.25rem;
+    margin-top: 1.4rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -828,8 +665,8 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
   }
 
   .term-input-row {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
+    margin-top: 1.65rem;
+    padding-top: 1.1rem;
     border-top: 1px solid var(--t-border-soft);
     display: flex;
     align-items: center;
@@ -927,31 +764,10 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
 </style>
 
 <script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>('.term-tab[data-tab]');
-  const panels = document.querySelectorAll<HTMLElement>('.term-panel[data-panel]');
   const logEl = document.getElementById('interactive-log');
   const form = document.getElementById('term-form') as HTMLFormElement | null;
   const input = document.getElementById('term-input') as HTMLInputElement | null;
   const chips = document.querySelectorAll<HTMLButtonElement>('.q-chip[data-cmd]');
-
-  function activateTab(name: string) {
-    tabs.forEach((t) => {
-      const isMatch = t.dataset.tab === name;
-      t.classList.toggle('active', isMatch);
-      t.setAttribute('aria-selected', isMatch ? 'true' : 'false');
-    });
-    panels.forEach((p) => {
-      const isMatch = p.dataset.panel === name;
-      p.classList.toggle('active', isMatch);
-      p.hidden = !isMatch;
-    });
-  }
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      if (tab.dataset.tab) activateTab(tab.dataset.tab);
-    });
-  });
 
   function appendOutput(cmd: string, output: string) {
     if (!logEl) return;
@@ -967,6 +783,12 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  function scrollToBlock(id: string, label: string, cmd: string) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    appendOutput(cmd, `-> Jumped to ${label} in buffer.`);
+  }
+
   function runCommand(raw: string) {
     const cmd = raw.trim();
     if (!cmd) return;
@@ -976,19 +798,20 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
       if (logEl) logEl.innerHTML = '';
       return;
     }
-    if (lower === 'card' || lower.startsWith('mcp')) {
-      activateTab('card');
-      appendOutput(cmd, '-> Switched active buffer to [1] mcp-card.json ("SUN\'s Blog" engineer card).');
+    if (lower.includes('philosophy')) {
+      scrollToBlock('sec-philosophy', 'mcp://sun.blog/philosophy', cmd);
       return;
     }
-    if (lower === 'stack' || lower === 'roofline') {
-      activateTab('stack');
-      appendOutput(cmd, '-> Switched active buffer to [2] roofline-stack.sh.');
+    if (lower.includes('list-endpoints') || lower === 'endpoints') {
+      scrollToBlock('sec-endpoints', 'mcp list-endpoints --public', cmd);
       return;
     }
-    if (lower === 'log' || lower === 'git log') {
-      activateTab('log');
-      appendOutput(cmd, '-> Switched active buffer to [3] git-log career graph.');
+    if (lower === 'about' || lower.startsWith('mcp')) {
+      scrollToBlock('sec-about', 'mcp://sun.blog/about', cmd);
+      return;
+    }
+    if (lower === 'log' || lower.startsWith('git log') || lower === 'career') {
+      scrollToBlock('sec-career', 'git log career', cmd);
       return;
     }
     if (lower === 'pwd') {
@@ -1030,7 +853,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     if (lower === 'help' || lower === '?') {
       appendOutput(
         cmd,
-        'Available commands:\n  pwd          Print notebook path\n  whoami       Short identity summary\n  nvidia-smi   Inspect virtual GPU node telemetry\n  euler        Print favorite physics/hardware/crypto identities\n  card         Switch to Tab 1 (mcp-card.json)\n  stack        Switch to Tab 2 (roofline-stack.sh)\n  log          Switch to Tab 3 (git-log)\n  clear        Clear interactive output buffer'
+        'Available commands:\n  pwd          Print notebook path\n  whoami       Short identity summary\n  nvidia-smi   Inspect virtual GPU node telemetry\n  euler        Print favorite physics/hardware/crypto identities\n  about        Jump to mcp://sun.blog/about\n  philosophy   Jump to mcp://sun.blog/philosophy\n  git log      Jump to career commit graph\n  endpoints    Jump to public endpoints\n  clear        Clear interactive output buffer'
       );
       return;
     }

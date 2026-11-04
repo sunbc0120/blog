@@ -255,12 +255,32 @@ a:hover {
 
 .masthead-cli {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.22rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  margin-bottom: 0.85rem;
+}
+
+.masthead-cli-cmd {
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.42rem;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.8rem;
-  margin-bottom: 0.7rem;
+}
+
+.masthead-cli-out {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.mc-arrow {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .mc-sigil {
@@ -279,11 +299,6 @@ a:hover {
 
 .mc-arg {
   color: var(--text-primary);
-}
-
-.mc-comment {
-  color: var(--text-muted);
-  margin-left: 0.25rem;
 }
 
 .masthead h1 {
