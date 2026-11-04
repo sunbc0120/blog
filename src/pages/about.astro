@@ -43,10 +43,8 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
             </div>
             <h1 class="mcp-name">Baichuan Sun, PhD</h1>
             <p class="mcp-tagline">
-              PhD-trained statistical physicist and Staff-level machine learning engineer with 10+ years spanning
-              scientific research, ML experimentation, production AI, and large-scale compute. Interested in what
-              actually happens between the mathematical objective, the evaluation harness, the HBM memory controller,
-              and the cluster fabric.
+              Physicist turned distributed GPU &amp; ML systems architect. Interested in what actually happens between
+              the mathematical objective, the compiler IR, the HBM memory controller, and the network NIC.
             </p>
           </div>
 
@@ -54,16 +52,16 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
             <div class="kv-row">
               <span class="kv-key">"current_role"</span>
               <span class="kv-val">
-                Staff Customer Engineer, Generative AI (<span class="t-str">"Google, Alphabet Inc."</span>, Australia &middot; Jan 2025 - Present)
+                Staff Customer Engineer, Generative AI (<span class="t-str">"Google"</span>, Australia &middot; Jan 2025 - Present)
               </span>
             </div>
             <div class="kv-row">
               <span class="kv-key">"model_&_systems"</span>
               <span class="kv-val">
-                [<span class="t-str">"RL Fine-Tuning on B200 (Gemma 3)"</span>{', '}
-                <span class="t-str">"Transformer &amp; Multimodal Systems on H200 / GKE"</span>{', '}
-                <span class="t-str">"PyTorch / fastai &amp; Evaluation Integrity"</span>{', '}
-                <span class="t-str">"Bayesian Opt, Manifold Learning &amp; National HPC"</span>]
+                [<span class="t-str">"On-Policy RL on B200 (Gemma 3 / GRPO)"</span>{', '}
+                <span class="t-str">"Multi-Node GPU Training &amp; Serving (H200 / GKE)"</span>{', '}
+                <span class="t-str">"PyTorch / Compiler IR &amp; Eval Integrity"</span>{', '}
+                <span class="t-str">"Bayesian Opt, Manifold Learning &amp; Statistical Physics"</span>]
               </span>
             </div>
             <div class="kv-row">
@@ -139,13 +137,14 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
                   <span class="git-ref head">(HEAD -&gt; main, tag: google)</span>
                   <span class="git-loc">Jan 2025 - Present &middot; Australia</span>
                 </div>
-                <div class="git-title">Staff Customer Engineer, Generative AI &middot; Google, Alphabet Inc.</div>
+                <div class="git-title">Staff Customer Engineer, Generative AI &middot; Google</div>
                 <p class="git-desc">
-                  Led engineering of a Gemma 3 reinforcement-learning fine-tuning architecture on GKE B200, empirically
-                  comparing candidate frameworks, rejecting benchmark-contaminated approaches, and coordinating NVIDIA /
-                  GCP / client engineering to clear training and deployment blockers. Refactored coupled legacy research
-                  containers to restore stalled transformer CV workloads on GKE H200 clusters under a one-week deadline,
-                  and architected production multimodal OCR reasoning and bidirectional voice-streaming agentic systems.
+                  Living inside multi-node B200 and H200 GKE clusters where clean paper recipes meet real silicon and
+                  data pathologies: engineering on-policy reinforcement learning (GRPO) post-training loops for Gemma 3,
+                  auditing evaluation harnesses to strip out subtle benchmark contamination before trusting a reward
+                  curve, untangling coupled CUDA and container dependency graphs for vision transformers on H200s, and
+                  building low-latency multimodal document reasoning and bidirectional audio + VAD loops that hold up
+                  outside a notebook.
                 </p>
               </div>
             </div>
@@ -159,15 +158,16 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
                   <span class="git-loc">Jan 2020 - Jan 2025 &middot; Australia</span>
                 </div>
                 <div class="git-title">
-                  Senior AI/ML Solutions Architect | Senior Applied Scientist | Senior Data Scientist &middot; Amazon Web Services (AWS)
+                  Senior Applied Scientist | Senior Data Scientist | Senior AI/ML Architect &middot; Amazon Web Services (AWS)
                 </div>
                 <p class="git-desc">
-                  Took end-to-end ownership of a failing Detectron2 computer-vision pipeline with custom PyTorch / fastai
-                  modelling and evaluation, lifting QA-verified production accuracy from 70% to 98%, and built a Python
-                  reverse-matching audit algorithm hitting 100% QA-verified accuracy in a three-way workflow. Developed
-                  open-source <code>DenseClus</code> (mixed-type clustering sustaining 2,000+ monthly downloads), served
-                  as regional technical liaison during the Amazon Bedrock beta, and engineered early production fastai
-                  serving, load-testing, and observability patterns on SageMaker.
+                  Five years building custom PyTorch and fastai systems against messy real-world distributions. Rebuilt
+                  a failing Detectron2 vision pipeline from label taxonomy through loss geometry and evaluation (70%
+                  &rarr; 98% verified accuracy), wrote open-source <code>DenseClus</code> to cluster mixed
+                  categorical-numerical tables via joint manifold embeddings (UMAP + HDBSCAN, 2,000+ monthly downloads),
+                  designed an exact reverse-matching reconciliation algorithm (100% verified accuracy) around noisy OCR
+                  outputs, and debugged early foundation-model serving internals, load generation, and tail-latency
+                  observability on SageMaker and Bedrock.
                 </p>
               </div>
             </div>
@@ -177,17 +177,18 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
               <div class="git-body">
                 <div class="git-meta">
                   <span class="git-hash">7b3d219</span>
-                  <span class="git-ref">(tag: quantumblack-mckinsey)</span>
+                  <span class="git-ref">(tag: quantumblack)</span>
                   <span class="git-loc">Nov 2018 - Jan 2020 &middot; Australia</span>
                 </div>
                 <div class="git-title">
-                  Senior Fellow Data Scientist / Management Consultant &middot; QuantumBlack AI, McKinsey &amp; Company
+                  Senior Fellow Data Scientist &middot; QuantumBlack AI
                 </div>
                 <p class="git-desc">
-                  Led predictive modelling, anomaly detection, and large-scale optimisation across mining, energy, and
-                  biotech (supporting US patent filings). Diagnosed temporal leakage, model-design errors, and
-                  algorithmic bias in existing predictive systems, redesigning evaluation harnesses before production
-                  decisions were made. Placed 3 / 5,052 (Top 1%) in the McKinsey Analytics Online Hackathon.
+                  High-dimensional time-series modelling, anomaly detection, and constrained optimisation on industrial
+                  telemetry across mining, energy grids, and biotech. Spent just as much time breaking models as
+                  fitting them: hunting down temporal target leakage, non-stationary split bugs, and estimator bias
+                  that made offline cross-validation look heroic right before live deployment (placing 3rd / 5,052 in
+                  the global analytics hackathon along the way).
                 </p>
               </div>
             </div>
@@ -200,13 +201,13 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
                   <span class="git-ref">(tag: csiro-hpc)</span>
                   <span class="git-loc">Aug 2015 - Oct 2018 &middot; Australia</span>
                 </div>
-                <div class="git-title">Data Scientist / Postdoctoral Fellow &middot; CSIRO</div>
+                <div class="git-title">Data Scientist &amp; Postdoctoral Fellow &middot; CSIRO</div>
                 <p class="git-desc">
-                  Developed Bayesian optimisation, manifold learning, and statistical-physics ML methods to predict
-                  nanomaterial structure-property relationships, scaling high-dimensional workloads across Pawsey and
-                  NCI national supercomputing infrastructure. Published 20+ peer-reviewed papers, released open
-                  scientific datasets, secured competitive Pawsey, NCI, CSIRO eResearch, and NVIDIA GPU grants, and
-                  supervised cross-institutional junior researchers.
+                  Where physics simulation met statistical machine learning on Pawsey and NCI national supercomputers.
+                  Built Bayesian optimisation loops and non-linear manifold-learning projections to map noisy,
+                  high-dimensional structure-property surfaces in graphene oxide and metallic nanostructures (20+
+                  peer-reviewed papers across <em>IJCV</em>, <em>J. Phys. Chem. C</em>, <em>J. Phys.: Materials</em>,
+                  and <em>JCIM</em>, backed by competitive national HPC and NVIDIA GPU compute grants).
                 </p>
               </div>
             </div>
@@ -223,9 +224,10 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
                   PhD in Statistical Physics (NTU Singapore, 2011 - 2015) &amp; BE in Mechanical Engineering (HUST, 2006 - 2010)
                 </div>
                 <p class="git-desc">
-                  PhD CGPA 4.5 / 5.0 (statistical mechanics, Monte Carlo, thermodynamic simulation &amp; modelling,
-                  PDEs). Alumnus of the Wolfram Research Summer School; recipient of the ACS Publication Award for
-                  Reviewing Activity, PyTorch Scholarship Challenge, and NVIDIA Deep Learning Institute certifications.
+                  Four years of statistical mechanics, Markov-chain Monte Carlo, thermodynamic modelling, and coupled
+                  PDEs at NTU Singapore (CGPA 4.5 / 5.0), built on an undergraduate core in linear algebra,
+                  probability, control theory, and pattern recognition at HUST, with a summer detour into cellular
+                  automata and computational universes at the Wolfram Research Summer School.
                 </p>
               </div>
             </div>
@@ -266,7 +268,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
             id="term-input"
             type="text"
             class="term-input"
-            placeholder="type a command (try: pubs, pwd, nvidia-smi, euler, whoami, clear, help)..."
+            placeholder="type a command (try: pubs, pwd, whoami, clear, help)..."
             spellcheck="false"
           />
           <button type="submit" class="term-run-btn">Run &crarr;</button>
@@ -276,8 +278,6 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
           <span class="quick-label">quick exec:</span>
           <button type="button" class="q-chip" data-cmd="pubs">pubs</button>
           <button type="button" class="q-chip" data-cmd="pwd">pwd</button>
-          <button type="button" class="q-chip" data-cmd="nvidia-smi">nvidia-smi</button>
-          <button type="button" class="q-chip" data-cmd="euler">euler</button>
           <button type="button" class="q-chip" data-cmd="whoami">whoami</button>
           <button type="button" class="q-chip" data-cmd="help">help</button>
           <button type="button" class="q-chip" data-cmd="clear">clear</button>
@@ -830,7 +830,7 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
     if (lower === 'whoami') {
       appendOutput(
         cmd,
-        'baichuan.sun (PhD Statistical Physics · Staff Customer Engineer, Generative AI @ Google · Melbourne, AU)'
+        'baichuan.sun (PhD Statistical Physics -> Distributed GPU & ML Systems · Melbourne, AU)'
       );
       return;
     }
@@ -855,38 +855,10 @@ const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
       );
       return;
     }
-    if (lower === 'nvidia-smi') {
-      appendOutput(
-        cmd,
-        [
-          '+-----------------------------------------------------------------------------------------+',
-          '| GKE-B200-H200   Driver: 570.xx        CUDA: 12.8        Fabric: 8x NIC RDMA + NVLink    |',
-          '|-------------------------------+------------------------+--------------------------------|',
-          '| GPU  Name            TCC/WDDM | Bus-Id          Disp.A | Volatile Uncorr. ECC           |',
-          '|   0  NVIDIA-B200-0      Off   | 00000000:01:00.0   Off |                              0 |',
-          '|   7  NVIDIA-B200-7      Off   | 00000000:08:00.0   Off |                              0 |',
-          '+-------------------------------+------------------------+--------------------------------+',
-          '| Active Process: gemma3_rl_finetune.py      | Eval-Contamination: 0.00% | Compute-Bound  |',
-          '+-----------------------------------------------------------------------------------------+',
-        ].join('\n')
-      );
-      return;
-    }
-    if (lower === 'euler' || lower === 'math') {
-      appendOutput(
-        cmd,
-        [
-          'Partition Function  : Z = sum_i exp(-beta * E_i)',
-          'Roofline Ceiling    : Perf(I) = min(Peak_FLOPS, I * Peak_HBM_BW)',
-          'Euler Totient (RSA) : m^phi(n) === 1 (mod n)  =>  (m^e)^k mod n = m',
-        ].join('\n')
-      );
-      return;
-    }
     if (lower === 'help' || lower === '?') {
       appendOutput(
         cmd,
-        'Available commands:\n  pubs         List selected peer-reviewed publications (IJCV, JPCC, JPM, JCIM)\n  pwd          Print notebook path\n  whoami       Short identity summary\n  nvidia-smi   Inspect virtual GKE B200/H200 node telemetry\n  euler        Print favorite physics/hardware/crypto identities\n  about        Jump to mcp://sun.blog/about\n  philosophy   Jump to mcp://sun.blog/philosophy\n  git log      Jump to career commit graph\n  endpoints    Jump to public endpoints\n  clear        Clear interactive output buffer'
+        'Available commands:\n  pubs         List selected peer-reviewed publications (IJCV, JPCC, JPM, JCIM)\n  pwd          Print notebook path\n  whoami       Short identity summary\n  about        Jump to mcp://sun.blog/about\n  philosophy   Jump to mcp://sun.blog/philosophy\n  git log      Jump to career commit graph\n  endpoints    Jump to public endpoints\n  clear        Clear interactive output buffer'
       );
       return;
     }
