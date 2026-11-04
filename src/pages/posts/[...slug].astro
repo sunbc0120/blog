@@ -1,0 +1,33 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const wordCount = (post.body || '').trim().split(/\s+/).length;
+const readingMinutes = Math.max(2, Math.round(wordCount / 220));
+---
+
+<PostLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  updatedDate={post.data.updatedDate}
+  categories={post.data.categories}
+  toc={post.data.toc}
+  interactive={post.data.interactive}
+  notebookSource={post.data.notebookSource}
+  headings={headings}
+  readingMinutes={readingMinutes}
+>
+  <Content />
+</PostLayout>
