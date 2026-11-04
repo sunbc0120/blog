@@ -23,16 +23,23 @@ function estimateMinutes(body?: string) {
 <BaseLayout title="SUN's Blog">
   <div class="narrow-shell">
     <section class="masthead">
-      <span class="masthead-kicker">Systems &middot; GPU Computing &middot; Applied ML</span>
+      <div class="masthead-cli">
+        <span class="mc-sigil">~$</span>
+        <span class="mc-cmd">ls</span>
+        <span class="mc-flag">-lt</span>
+        <span class="mc-arg">~/notes/</span>
+        <span class="mc-comment">// systems &middot; gpu computing &middot; applied math</span>
+      </div>
       <h1>SUN's Blog</h1>
       <p class="masthead-desc">
-        Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.
+        Notes from hard technical lessons, written down to remind my future self and help anyone debugging the same seam between math and hardware.
       </p>
     </section>
 
     {allCategories.length > 0 && (
       <div class="topic-filter-bar" role="toolbar" aria-label="Filter notes by topic">
-        <button type="button" class="filter-chip active" data-filter="all">all</button>
+        <span class="filter-prompt">--tag=</span>
+        <button type="button" class="filter-chip active" data-filter="all">*</button>
         {allCategories.map((cat) => (
           <button type="button" class="filter-chip" data-filter={cat}>
             #{cat}
@@ -42,36 +49,57 @@ function estimateMinutes(body?: string) {
     )}
 
     <div class="post-list" id="post-list">
-      {allPosts.map((post) => {
-        const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: '2-digit',
-          timeZone: 'UTC',
-        });
+      {allPosts.map((post, idx) => {
+        const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
         const mins = estimateMinutes(post.body);
+        const ext = post.data.interactive ? 'mdx' : 'md';
+        const tabNum = String(idx + 1).padStart(2, '0');
         return (
           <a
             href={`${base}/posts/${post.id}/`}
             class="post-card"
             data-categories={post.data.categories.join(',')}
           >
-            <div class="post-card-meta">
-              <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
-              <span>&middot;</span>
-              <span>{mins} min read</span>
-              {post.data.interactive && <span class="badge-interactive">Interactive Widget</span>}
-              {post.data.notebookSource && <span class="badge-notebook">Jupyter Notebook</span>}
+            <div class="post-card-chrome">
+              <div class="pc-chrome-left">
+                <span class="pc-dots" aria-hidden="true">
+                  <span class="pc-dot pc-dot-r"></span>
+                  <span class="pc-dot pc-dot-y"></span>
+                  <span class="pc-dot pc-dot-g"></span>
+                </span>
+                <span class="pc-tab">
+                  <span class="pc-tab-idx">{tabNum}</span>
+                  <span class="pc-tab-file">posts/{post.id}.{ext}</span>
+                </span>
+              </div>
+
+              <div class="pc-chrome-right">
+                {post.data.interactive && <span class="badge-interactive">INTERACTIVE</span>}
+                {post.data.notebookSource && <span class="badge-notebook">IPYNB</span>}
+                <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+                <span>&middot;</span>
+                <span>{mins}m</span>
+              </div>
             </div>
-            <h2>{post.data.title}</h2>
-            <p>{post.data.description}</p>
-            {post.data.categories.length > 0 && (
+
+            <div class="post-card-body">
+              <div class="pc-cmd-preview">
+                <span class="mc-sigil">~$</span>
+                <span class="mc-cmd">cat</span>
+                <span class="mc-arg">posts/{post.id}.{ext}</span>
+              </div>
+              <h2>{post.data.title}</h2>
+              <p>{post.data.description}</p>
+            </div>
+
+            <div class="post-card-statusbar">
               <div class="post-card-tags">
                 {post.data.categories.map((cat) => (
                   <span class="tag-pill">#{cat}</span>
                 ))}
               </div>
-            )}
+              <span class="pc-open-hint">open buffer &crarr;</span>
+            </div>
           </a>
         );
       })}
