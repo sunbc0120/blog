@@ -352,7 +352,7 @@ a:hover {
   color: var(--accent);
 }
 
-/* Post Feed List (Terminal Window / Tab Cards consistent with /about) */
+/* Post Feed List (Terminal Window Cards consistent with /about) */
 .post-list {
   display: flex;
   flex-direction: column;
@@ -396,23 +396,16 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.48rem 1rem 0;
+  padding: 0.62rem 1.15rem;
   background: var(--pc-chrome);
   border-bottom: 1px solid var(--pc-border-soft);
   flex-wrap: wrap;
-}
-
-.pc-chrome-left {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.75rem;
 }
 
 .pc-dots {
   display: inline-flex;
   align-items: center;
   gap: 0.36rem;
-  padding-bottom: 0.52rem;
 }
 
 .pc-dot {
@@ -425,38 +418,10 @@ a:hover {
 .pc-dot-y { background: #f59e0b; }
 .pc-dot-g { background: #10b981; }
 
-.pc-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.42rem;
-  padding: 0.4rem 0.82rem;
-  background: var(--pc-bg);
-  border: 1px solid var(--pc-border-soft);
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.pc-tab-idx {
-  font-size: 0.66rem;
-  padding: 0.04rem 0.32rem;
-  border-radius: 4px;
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.pc-tab-file {
-  color: var(--text-primary);
-}
-
 .pc-chrome-right {
   display: inline-flex;
   align-items: center;
   gap: 0.48rem;
-  padding-bottom: 0.48rem;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.74rem;
   color: var(--text-muted);
@@ -976,7 +941,10 @@ details.nb-collapse pre.nb-output {
   .page-shell {
     padding: 2rem 1rem 3.5rem;
   }
-  .post-card {
-    padding: 1.2rem;
+  .post-card-body {
+    padding: 1.05rem 1rem 1rem;
+  }
+  .post-card-statusbar {
+    padding: 0.55rem 1rem;
   }
 }

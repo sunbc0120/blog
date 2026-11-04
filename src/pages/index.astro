@@ -54,11 +54,10 @@ function estimateMinutes(body?: string) {
     )}
 
     <div class="post-list" id="post-list">
-      {allPosts.map((post, idx) => {
+      {allPosts.map((post) => {
         const formattedDate = post.data.pubDate.toISOString().slice(0, 10);
         const mins = estimateMinutes(post.body);
         const ext = post.data.interactive ? 'mdx' : 'md';
-        const tabNum = String(idx + 1).padStart(2, '0');
         return (
           <a
             href={`${base}/posts/${post.id}/`}
@@ -66,17 +65,11 @@ function estimateMinutes(body?: string) {
             data-categories={post.data.categories.join(',')}
           >
             <div class="post-card-chrome">
-              <div class="pc-chrome-left">
-                <span class="pc-dots" aria-hidden="true">
-                  <span class="pc-dot pc-dot-r"></span>
-                  <span class="pc-dot pc-dot-y"></span>
-                  <span class="pc-dot pc-dot-g"></span>
-                </span>
-                <span class="pc-tab">
-                  <span class="pc-tab-idx">{tabNum}</span>
-                  <span class="pc-tab-file">posts/{post.id}.{ext}</span>
-                </span>
-              </div>
+              <span class="pc-dots" aria-hidden="true">
+                <span class="pc-dot pc-dot-r"></span>
+                <span class="pc-dot pc-dot-y"></span>
+                <span class="pc-dot pc-dot-g"></span>
+              </span>
 
               <div class="pc-chrome-right">
                 {post.data.interactive && <span class="badge-interactive">INTERACTIVE</span>}
@@ -90,7 +83,7 @@ function estimateMinutes(body?: string) {
             <div class="post-card-body">
               <div class="pc-cmd-preview">
                 <span class="mc-sigil">~$</span>
-                <span class="mc-cmd">cat</span>
+                <span class="mc-cmd">less</span>
                 <span class="mc-arg">posts/{post.id}.{ext}</span>
               </div>
               <h2>{post.data.title}</h2>
