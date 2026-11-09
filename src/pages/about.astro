@@ -1,0 +1,881 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="About"
+  description="Baichuan Sun - PhD-trained statistical physicist and AI engineer working on RL fine-tuning, transformer & multimodal systems on B200/H200 GPUs, and statistical machine learning."
+>
+  <div class="about-shell">
+    <div class="term-window" id="about-terminal">
+      <!-- Single-Window Terminal Titlebar -->
+      <div class="term-chrome">
+        <div class="term-lights" aria-hidden="true">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+
+        <div class="term-tty-meta">zsh &middot; utf-8 &middot; tty0</div>
+      </div>
+
+      <!-- Single Scrollable Terminal Buffer -->
+      <div class="term-viewport" id="term-viewport">
+        <!-- 1. mcp inspect --card mcp://sun.blog/about -->
+        <section id="sec-about" class="term-block">
+          <div class="cmd-line">
+            <span class="t-sigil">~$</span>
+            <span class="t-cmd">mcp inspect</span>
+            <span class="t-flag">--card</span>
+            <span class="t-arg">mcp://sun.blog/about</span>
+          </div>
+
+          <div class="mcp-banner">
+            <div class="mcp-banner-top">
+              <div>
+                <span class="t-badge-emerald">MCP CARD v2026</span>
+                <span class="t-badge-cyan">RESEARCH ENGINEERING &middot; MODEL TRAINING &amp; ML SYSTEMS</span>
+              </div>
+              <span class="t-comment">status: active &middot; melbourne, au (UTC+11)</span>
+            </div>
+            <h1 class="mcp-name">Baichuan Sun, PhD</h1>
+            <p class="mcp-tagline">
+              Physicist turned distributed GPU &amp; ML systems architect. Interested in what actually happens between
+              the mathematical objective, the compiler IR, the HBM memory controller, and the network NIC.
+            </p>
+          </div>
+
+          <div class="kv-grid">
+            <div class="kv-row">
+              <span class="kv-key">"current_role"</span>
+              <span class="kv-val">
+                AI Engineer, Google (Australia &middot; Jan 2025 - Present)
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">"model_&_systems"</span>
+              <span class="kv-val">
+                [<span class="t-str">"On-Policy RL on B200 (Gemma 3 / GRPO)"</span>{', '}
+                <span class="t-str">"Multi-Node GPU Training &amp; Serving (H200 / GKE)"</span>{', '}
+                <span class="t-str">"PyTorch / Compiler IR &amp; Eval Integrity"</span>{', '}
+                <span class="t-str">"Bayesian Opt, Manifold Learning &amp; Statistical Physics"</span>]
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">"research_signal"</span>
+              <span class="kv-val">
+                20+ peer-reviewed papers (<em>IJCV</em> 2024, <em>J. Phys. Chem. C</em> 2020, <em>J. Phys.: Materials</em> 2019, <em>JCIM</em> 2017)
+                {' '}&middot; Author of <span class="t-str">"DenseClus"</span> (2,000+ monthly downloads)
+                {' '}&middot; McKinsey Analytics Hackathon 3 / 5,052 (Top 1%)
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">"academic_priors"</span>
+              <span class="kv-val">
+                PhD in Statistical Physics (<a href="https://www.ntu.edu.sg/" target="_blank" rel="noopener noreferrer">NTU Singapore</a>, 2011 - 2015, CGPA 4.5/5.0)
+                {' '}&middot; BE in Mechanical Engineering (<a href="https://english.hust.edu.cn/" target="_blank" rel="noopener noreferrer">HUST</a>, 2006 - 2010)
+                {' '}&middot; <a href="https://education.wolfram.com/summer-school/alumni/2013/baichuan-sun/" target="_blank" rel="noopener noreferrer">Wolfram Research Summer School</a>
+                {' '}&middot; ACS Publication Award (peer reviewer for <em>JACS</em>, <em>Nanoscale</em>, <em>Energy</em>)
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">"compute_&_grants"</span>
+              <span class="kv-val">
+                Competitive Pawsey, NCI, CSIRO eResearch &amp; NVIDIA GPU grants
+                {' '}&middot; Thin client + split mechanical keyboard &rarr; ephemeral multi-GPU clusters over SSH/RDMA
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. mcp inspect --card mcp://sun.blog/philosophy -->
+        <section id="sec-philosophy" class="term-block">
+          <div class="cmd-line">
+            <span class="t-sigil">~$</span>
+            <span class="t-cmd">mcp inspect</span>
+            <span class="t-flag">--card</span>
+            <span class="t-arg">mcp://sun.blog/philosophy</span>
+          </div>
+
+          <div class="mcp-card-prose">
+            <p>
+              My training started in statistical mechanics, Monte Carlo simulation, thermodynamic modelling, and PDEs
+              during my PhD in Statistical Physics at NTU Singapore, followed by years scaling Bayesian optimisation and
+              manifold learning across Pawsey and NCI national supercomputers at CSIRO. Once you spend enough time
+              debugging partition functions, high-dimensional energy landscapes, and noisy physical datasets, modern
+              deep learning stops looking like magic and starts looking like familiar statistical physics running
+              against very concrete silicon ceilings.
+            </p>
+            <p>
+              Most hard failures I debug sit in the seam between <strong>experimental rigour</strong> and
+              {' '}<strong>systems mechanics</strong>: benchmark contamination or temporal leakage quietly invalidating
+              an offline evaluation, an on-policy RL fine-tuning loop hitting HBM and collective bottlenecks on GKE
+              B200/H200 clusters, or coupled research containers stalling a production rollout. This notebook is where
+              I write down the clean mental models, proofs, and reproducible implementations after the dust settles.
+            </p>
+          </div>
+        </section>
+
+        <!-- 3. git log --graph --abbrev-commit --decorate career -->
+        <section id="sec-career" class="term-block">
+          <div class="cmd-line">
+            <span class="t-sigil">~$</span>
+            <span class="t-cmd">git log</span>
+            <span class="t-flag">--graph --abbrev-commit --decorate</span>
+            <span class="t-arg">career</span>
+          </div>
+
+          <div class="git-graph">
+            <div class="git-entry">
+              <div class="git-rail"><span class="git-node head"></span></div>
+              <div class="git-body">
+                <div class="git-meta">
+                  <span class="git-hash">c8f4a21</span>
+                  <span class="git-ref head">(HEAD -&gt; main, tag: google)</span>
+                  <span class="git-loc">Jan 2025 - Present &middot; Australia</span>
+                </div>
+                <div class="git-title">AI Engineer, Google</div>
+                <p class="git-desc">
+                  Living inside multi-node B200 and H200 GKE clusters where clean paper recipes meet real silicon and
+                  data pathologies: engineering on-policy reinforcement learning (GRPO) post-training loops for Gemma 3,
+                  auditing evaluation harnesses to strip out subtle benchmark contamination before trusting a reward
+                  curve, untangling coupled CUDA and container dependency graphs for vision transformers on H200s, and
+                  building low-latency multimodal document reasoning and bidirectional audio + VAD loops that hold up
+                  outside a notebook.
+                </p>
+              </div>
+            </div>
+
+            <div class="git-entry">
+              <div class="git-rail"><span class="git-node"></span></div>
+              <div class="git-body">
+                <div class="git-meta">
+                  <span class="git-hash">94e1b07</span>
+                  <span class="git-ref">(tag: aws)</span>
+                  <span class="git-loc">Jan 2020 - Jan 2025 &middot; Australia</span>
+                </div>
+                <div class="git-title">
+                  Senior Applied Scientist | Senior Data Scientist | Senior AI/ML Architect &middot; Amazon Web Services (AWS)
+                </div>
+                <p class="git-desc">
+                  Five years building custom PyTorch and fastai systems against messy real-world distributions. Rebuilt
+                  a failing Detectron2 vision pipeline from label taxonomy through loss geometry and evaluation (70%
+                  &rarr; 98% verified accuracy), wrote open-source <code>DenseClus</code> to cluster mixed
+                  categorical-numerical tables via joint manifold embeddings (UMAP + HDBSCAN, 2,000+ monthly downloads),
+                  designed an exact reverse-matching reconciliation algorithm (100% verified accuracy) around noisy OCR
+                  outputs, and debugged early foundation-model serving internals, load generation, and tail-latency
+                  observability on SageMaker and Bedrock.
+                </p>
+              </div>
+            </div>
+
+            <div class="git-entry">
+              <div class="git-rail"><span class="git-node"></span></div>
+              <div class="git-body">
+                <div class="git-meta">
+                  <span class="git-hash">7b3d219</span>
+                  <span class="git-ref">(tag: quantumblack)</span>
+                  <span class="git-loc">Nov 2018 - Jan 2020 &middot; Australia</span>
+                </div>
+                <div class="git-title">
+                  Senior Fellow Data Scientist &middot; QuantumBlack AI
+                </div>
+                <p class="git-desc">
+                  High-dimensional time-series modelling, anomaly detection, and constrained optimisation on industrial
+                  telemetry across mining, energy grids, and biotech. Spent just as much time breaking models as
+                  fitting them: hunting down temporal target leakage, non-stationary split bugs, and estimator bias
+                  that made offline cross-validation look heroic right before live deployment (placing 3rd / 5,052 in
+                  the global analytics hackathon along the way).
+                </p>
+              </div>
+            </div>
+
+            <div class="git-entry">
+              <div class="git-rail"><span class="git-node"></span></div>
+              <div class="git-body">
+                <div class="git-meta">
+                  <span class="git-hash">52d09c4</span>
+                  <span class="git-ref">(tag: csiro-hpc)</span>
+                  <span class="git-loc">Aug 2015 - Oct 2018 &middot; Australia</span>
+                </div>
+                <div class="git-title">Data Scientist &amp; Postdoctoral Fellow &middot; CSIRO</div>
+                <p class="git-desc">
+                  Where physics simulation met statistical machine learning on Pawsey and NCI national supercomputers.
+                  Built Bayesian optimisation loops and non-linear manifold-learning projections to map noisy,
+                  high-dimensional structure-property surfaces in graphene oxide and metallic nanostructures (20+
+                  peer-reviewed papers across <em>IJCV</em>, <em>J. Phys. Chem. C</em>, <em>J. Phys.: Materials</em>,
+                  and <em>JCIM</em>, backed by competitive national HPC and NVIDIA GPU compute grants).
+                </p>
+              </div>
+            </div>
+
+            <div class="git-entry">
+              <div class="git-rail"><span class="git-node"></span></div>
+              <div class="git-body">
+                <div class="git-meta">
+                  <span class="git-hash">1a09e3c</span>
+                  <span class="git-ref">(tag: phd-ntu, tag: hust)</span>
+                  <span class="git-loc">2006 - 2015 &middot; Singapore &amp; China</span>
+                </div>
+                <div class="git-title">
+                  PhD in Statistical Physics (NTU Singapore, 2011 - 2015) &amp; BE in Mechanical Engineering (HUST, 2006 - 2010)
+                </div>
+                <p class="git-desc">
+                  Four years of statistical mechanics, Markov-chain Monte Carlo, thermodynamic modelling, and coupled
+                  PDEs at NTU Singapore (CGPA 4.5 / 5.0), built on an undergraduate core in linear algebra,
+                  probability, control theory, and pattern recognition at HUST, with a summer detour into cellular
+                  automata and computational universes at the Wolfram Research Summer School.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. mcp list-endpoints --public -->
+        <section id="sec-endpoints" class="term-block">
+          <div class="cmd-line">
+            <span class="t-sigil">~$</span>
+            <span class="t-cmd">mcp list-endpoints</span>
+            <span class="t-flag">--public</span>
+          </div>
+
+          <div class="endpoint-row">
+            <a href="https://github.com/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">git://</span>github.com/sunbc0120
+            </a>
+            <a href="https://www.linkedin.com/in/sunbc0120" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">https://</span>linkedin.com/in/sunbc0120
+            </a>
+            <a href="https://stackoverflow.com/users/3317548" target="_blank" rel="noopener noreferrer" class="ep-pill">
+              <span class="ep-proto">so://</span>users/3317548
+            </a>
+            <a href={`${base}/rss.xml`} class="ep-pill">
+              <span class="ep-proto">feed://</span>rss.xml
+            </a>
+          </div>
+        </section>
+
+        <!-- Interactive Command Output Log -->
+        <div id="interactive-log" class="interactive-log" aria-live="polite"></div>
+
+        <!-- Interactive Shell Input Bar -->
+        <form id="term-form" class="term-input-row" autocomplete="off">
+          <label for="term-input" class="t-sigil">~$</label>
+          <input
+            id="term-input"
+            type="text"
+            class="term-input"
+            placeholder="type a command (try: pubs, pwd, whoami, clear, help)..."
+            spellcheck="false"
+          />
+          <button type="submit" class="term-run-btn">Run &crarr;</button>
+        </form>
+
+        <div class="quick-cmds" aria-label="Quick terminal commands">
+          <span class="quick-label">quick exec:</span>
+          <button type="button" class="q-chip" data-cmd="pubs">pubs</button>
+          <button type="button" class="q-chip" data-cmd="pwd">pwd</button>
+          <button type="button" class="q-chip" data-cmd="whoami">whoami</button>
+          <button type="button" class="q-chip" data-cmd="help">help</button>
+          <button type="button" class="q-chip" data-cmd="clear">clear</button>
+        </div>
+      </div>
+
+      <!-- Terminal Status Bar + Employer Disclaimer -->
+      <div class="term-statusbar">
+        <span>
+          <strong>Personal Capacity Notice:</strong> Notes, code, benchmarks, and opinions on this site are strictly my own
+          and do not represent the views or official positions of Google or any past employer.
+        </span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-shell {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .term-window {
+    --t-bg: #ffffff;
+    --t-chrome: #f1f5f9;
+    --t-surface: #f8fafc;
+    --t-border: #cbd5e1;
+    --t-border-soft: #e2e8f0;
+    --t-fg: #0f172a;
+    --t-sub: #334155;
+    --t-muted: #64748b;
+    --t-emerald: #059669;
+    --t-emerald-bg: rgba(5, 150, 105, 0.1);
+    --t-cyan: #0284c7;
+    --t-cyan-bg: rgba(2, 132, 199, 0.1);
+    --t-amber: #b45309;
+    --t-str: #0f766e;
+
+    border-radius: 14px;
+    border: 1px solid var(--t-border);
+    background: var(--t-bg);
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+  }
+
+  :global([data-theme="dark"]) .term-window {
+    --t-bg: #0d131c;
+    --t-chrome: #131b27;
+    --t-surface: #111926;
+    --t-border: #263449;
+    --t-border-soft: #1e293b;
+    --t-fg: #e6edf3;
+    --t-sub: #b6c2cf;
+    --t-muted: #6e7f96;
+    --t-emerald: #34d399;
+    --t-emerald-bg: rgba(52, 211, 153, 0.14);
+    --t-cyan: #38bdf8;
+    --t-cyan-bg: rgba(56, 189, 248, 0.14);
+    --t-amber: #fbbf24;
+    --t-str: #6ee7b7;
+  }
+
+  .term-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.72rem 1.15rem;
+    background: var(--t-chrome);
+    border-bottom: 1px solid var(--t-border-soft);
+  }
+
+  .term-lights {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .dot-red { background: #ef4444; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-green { background: #10b981; }
+
+  .term-tty-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--t-muted);
+  }
+
+  .term-viewport {
+    padding: 1.7rem 1.9rem 1.45rem;
+    color: var(--t-fg);
+  }
+
+  .term-block {
+    margin-bottom: 2.15rem;
+    scroll-margin-top: 5.5rem;
+  }
+
+  .term-block:last-of-type {
+    margin-bottom: 0.5rem;
+  }
+
+  .cmd-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    margin-bottom: 0.95rem;
+  }
+
+  .t-sigil {
+    color: var(--t-emerald);
+    font-weight: 700;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .t-cmd { color: var(--t-cyan); font-weight: 600; }
+  .t-flag { color: var(--t-amber); }
+  .t-arg { color: var(--t-fg); }
+  .t-str { color: var(--t-str); }
+  .t-comment {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--t-muted);
+  }
+
+  .mcp-banner {
+    padding: 1.25rem 1.4rem;
+    border-radius: 10px;
+    border: 1px solid var(--t-border-soft);
+    background: var(--t-surface);
+    margin-bottom: 1.15rem;
+  }
+
+  .mcp-banner-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .t-badge-emerald,
+  .t-badge-cyan {
+    display: inline-block;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 0.35rem;
+  }
+
+  .t-badge-emerald {
+    color: var(--t-emerald);
+    background: var(--t-emerald-bg);
+  }
+
+  .t-badge-cyan {
+    color: var(--t-cyan);
+    background: var(--t-cyan-bg);
+  }
+
+  .mcp-name {
+    margin: 0 0 0.45rem;
+    font-size: clamp(1.55rem, 2.8vw, 2.05rem);
+    letter-spacing: -0.025em;
+    color: var(--t-fg);
+  }
+
+  .mcp-tagline {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--t-sub);
+  }
+
+  .kv-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    border: 1px dashed var(--t-border);
+    font-size: 0.88rem;
+    line-height: 1.58;
+  }
+
+  .kv-row {
+    display: grid;
+    grid-template-columns: 185px minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .kv-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.81rem;
+    color: var(--t-cyan);
+    font-weight: 600;
+  }
+
+  .kv-val {
+    color: var(--t-sub);
+  }
+
+  .kv-val a {
+    color: var(--t-cyan);
+  }
+
+  .mcp-card-prose {
+    padding: 1.15rem 1.35rem;
+    border-radius: 10px;
+    border: 1px solid var(--t-border-soft);
+    background: var(--t-surface);
+  }
+
+  .mcp-card-prose p {
+    margin: 0 0 0.95rem;
+    font-size: 0.97rem;
+    line-height: 1.72;
+    color: var(--t-sub);
+  }
+
+  .mcp-card-prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Career Git Graph */
+  .git-graph {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0.15rem;
+  }
+
+  .git-entry {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .git-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .git-rail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--t-border);
+  }
+
+  .git-entry:last-child .git-rail::before {
+    bottom: 58%;
+  }
+
+  .git-node {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.35rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--t-bg);
+    border: 2.5px solid var(--t-cyan);
+  }
+
+  .git-node.head {
+    border-color: var(--t-emerald);
+    background: var(--t-emerald);
+  }
+
+  .git-body {
+    padding-bottom: 1.3rem;
+  }
+
+  .git-entry:last-child .git-body {
+    padding-bottom: 0.15rem;
+  }
+
+  .git-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .git-hash {
+    color: var(--t-amber);
+    font-weight: 600;
+  }
+
+  .git-ref {
+    color: var(--t-cyan);
+  }
+
+  .git-ref.head {
+    color: var(--t-emerald);
+    font-weight: 600;
+  }
+
+  .git-loc {
+    color: var(--t-muted);
+  }
+
+  .git-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--t-fg);
+    margin-bottom: 0.25rem;
+  }
+
+  .git-desc {
+    margin: 0;
+    font-size: 0.91rem;
+    line-height: 1.6;
+    color: var(--t-sub);
+  }
+
+  .endpoint-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .ep-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.38rem 0.78rem;
+    border-radius: 7px;
+    border: 1px solid var(--t-border-soft);
+    background: var(--t-surface);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--t-fg);
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .ep-pill:hover {
+    border-color: var(--t-cyan);
+    color: var(--t-cyan);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .ep-proto {
+    color: var(--t-emerald);
+    margin-right: 0.15rem;
+  }
+
+  /* Interactive Output & Prompt */
+  .interactive-log {
+    margin-top: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .interactive-log:empty {
+    display: none;
+  }
+
+  :global(.repl-item) {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--t-surface);
+    border: 1px solid var(--t-border-soft);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--t-sub);
+    overflow-x: auto;
+  }
+
+  :global(.repl-item pre) {
+    margin: 0.4rem 0 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--t-fg);
+  }
+
+  .term-input-row {
+    margin-top: 1.65rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--t-border-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .term-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--t-surface);
+    border: 1px solid var(--t-border-soft);
+    border-radius: 7px;
+    padding: 0.48rem 0.75rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--t-fg);
+    outline: none;
+  }
+
+  .term-input:focus {
+    border-color: var(--t-cyan);
+  }
+
+  .term-run-btn {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.48rem 0.85rem;
+    border-radius: 7px;
+    border: 1px solid var(--t-border);
+    background: var(--t-surface);
+    color: var(--t-cyan);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .term-run-btn:hover {
+    border-color: var(--t-cyan);
+    color: var(--t-emerald);
+  }
+
+  .quick-cmds {
+    margin-top: 0.65rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .quick-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--t-muted);
+    margin-right: 0.2rem;
+  }
+
+  .q-chip {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 5px;
+    border: 1px solid var(--t-border-soft);
+    background: transparent;
+    color: var(--t-muted);
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+
+  .q-chip:hover {
+    border-color: var(--t-cyan);
+    color: var(--t-cyan);
+  }
+
+  .term-statusbar {
+    padding: 0.75rem 1.4rem;
+    background: var(--t-chrome);
+    border-top: 1px solid var(--t-border-soft);
+    font-size: 0.78rem;
+    color: var(--t-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 680px) {
+    .term-viewport {
+      padding: 1.2rem 1.05rem;
+    }
+    .kv-row {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>
+
+<script>
+  const logEl = document.getElementById('interactive-log');
+  const form = document.getElementById('term-form') as HTMLFormElement | null;
+  const input = document.getElementById('term-input') as HTMLInputElement | null;
+  const chips = document.querySelectorAll<HTMLButtonElement>('.q-chip[data-cmd]');
+
+  function appendOutput(cmd: string, output: string) {
+    if (!logEl) return;
+    const item = document.createElement('div');
+    item.className = 'repl-item';
+    const header = document.createElement('div');
+    header.innerHTML = `<span style="color:var(--t-emerald);font-weight:700;">~$</span> <span style="color:var(--t-cyan);">${cmd.replace(/[<>&]/g, '')}</span>`;
+    const pre = document.createElement('pre');
+    pre.textContent = output;
+    item.appendChild(header);
+    item.appendChild(pre);
+    logEl.appendChild(item);
+    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function scrollToBlock(id: string, label: string, cmd: string) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    appendOutput(cmd, `-> Jumped to ${label} in buffer.`);
+  }
+
+  function runCommand(raw: string) {
+    const cmd = raw.trim();
+    if (!cmd) return;
+    const lower = cmd.toLowerCase();
+
+    if (lower === 'clear' || lower === 'cls') {
+      if (logEl) logEl.innerHTML = '';
+      return;
+    }
+    if (lower.includes('philosophy')) {
+      scrollToBlock('sec-philosophy', 'mcp://sun.blog/philosophy', cmd);
+      return;
+    }
+    if (lower.includes('list-endpoints') || lower === 'endpoints') {
+      scrollToBlock('sec-endpoints', 'mcp list-endpoints --public', cmd);
+      return;
+    }
+    if (lower === 'about' || lower.startsWith('mcp')) {
+      scrollToBlock('sec-about', 'mcp://sun.blog/about', cmd);
+      return;
+    }
+    if (lower === 'log' || lower.startsWith('git log') || lower === 'career') {
+      scrollToBlock('sec-career', 'git log career', cmd);
+      return;
+    }
+    if (lower === 'pwd') {
+      appendOutput(cmd, '/home/baichuan/sun-blog\n↳ stdout: "SUN\'s Blog"');
+      return;
+    }
+    if (lower === 'whoami') {
+      appendOutput(
+        cmd,
+        'baichuan.sun (PhD Statistical Physics -> Distributed GPU & ML Systems · Melbourne, AU)'
+      );
+      return;
+    }
+    if (lower === 'pubs' || lower === 'papers' || lower === 'publications') {
+      appendOutput(
+        cmd,
+        [
+          'Selected Publications (20+ peer-reviewed papers total):',
+          '  [2024] W. Yin, Y. Liu, C. Shen, B. Sun, A. van den Hengel.',
+          '         "Scaling Up Multi-domain Semantic Segmentation with Sentence Embeddings."',
+          '         International Journal of Computer Vision (IJCV), 2024.',
+          '  [2020] B. Motevalli, B. Sun, A. S. Barnard.',
+          '         "Understanding and predicting the cause of defects in graphene oxide nanostructures using ML."',
+          '         J. Phys. Chem. C, 2020.',
+          '  [2019] B. Sun, A. S. Barnard.',
+          '         "Visualising multi-dimensional structure/property relationships with dimension reducing algorithms."',
+          '         Journal of Physics: Materials, 2019.',
+          '  [2017] B. Sun, M. Fernandez, A. S. Barnard.',
+          '         "Machine learning for silver nanoparticle electron transfer property prediction."',
+          '         Journal of Chemical Information and Modeling (JCIM), 2017.',
+        ].join('\n')
+      );
+      return;
+    }
+    if (lower === 'help' || lower === '?') {
+      appendOutput(
+        cmd,
+        'Available commands:\n  pubs         List selected peer-reviewed publications (IJCV, JPCC, JPM, JCIM)\n  pwd          Print notebook path\n  whoami       Short identity summary\n  about        Jump to mcp://sun.blog/about\n  philosophy   Jump to mcp://sun.blog/philosophy\n  git log      Jump to career commit graph\n  endpoints    Jump to public endpoints\n  clear        Clear interactive output buffer'
+      );
+      return;
+    }
+
+    appendOutput(cmd, `zsh: command not found: ${cmd} (type "help" to list supported commands)`);
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!input) return;
+    runCommand(input.value);
+    input.value = '';
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      if (chip.dataset.cmd) runCommand(chip.dataset.cmd);
+    });
+  });
+</script>

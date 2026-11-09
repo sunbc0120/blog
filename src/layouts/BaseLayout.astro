@@ -1,0 +1,147 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import MeshWaveCanvas from '../components/MeshWaveCanvas.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Notes from hard technical lessons, to remind myself later and help those who may run into the same situation.",
+} = Astro.props;
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase === '/' ? '' : rawBase.replace(/\/$/, '');
+const pathname = Astro.url.pathname;
+const fullTitle = title === "SUN's Blog" ? title : `${title} | SUN's Blog`;
+
+const interactivePosts = await getCollection(
+  'blog',
+  ({ data }) => !data.draft && data.interactive
+);
+const leadInteractiveSlug = interactivePosts[0]?.id;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={`${base}/favicon.ico`} />
+    <link rel="alternate" type="application/rss+xml" title="SUN's Blog RSS Feed" href={`${base}/rss.xml`} />
+
+    <!-- Prevent flash of wrong theme before first paint -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('sun-blog-theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <MeshWaveCanvas />
+    <header class="site-header">
+      <div class="nav-inner">
+        <a href={`${base}/`} class="brand-link" aria-label="SUN's Blog home">
+          <span class="brand-cli">
+            <span class="brand-sigil">~$</span>
+            <span class="brand-cmd">mcp inspect</span>
+            <span class="brand-flag">--card</span>
+          </span>
+          <span class="brand-stdout">
+            <span class="brand-arrow">&#8627;</span>
+            <span>SUN's Blog</span>
+          </span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href={`${base}/`} aria-current={pathname === `${base}/` || pathname === base ? 'page' : undefined}>Notes</a>
+          {leadInteractiveSlug && (
+            <a
+              href={`${base}/posts/${leadInteractiveSlug}/`}
+              aria-current={pathname.includes(leadInteractiveSlug) ? 'page' : undefined}
+            >
+              Interactive Lab
+            </a>
+          )}
+          <a href={`${base}/about/`} aria-current={pathname.includes('/about') ? 'page' : undefined}>About</a>
+          <a href={`${base}/rss.xml`}>RSS</a>
+          <a href="https://github.com/sunbc0120" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <button
+            type="button"
+            class="theme-toggle"
+            id="theme-toggle-btn"
+            aria-label="Switch between Day and Night themes"
+            title="Switch Day / Night theme"
+          >
+            <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <div>
+            <strong>Baichuan Sun</strong> &middot; Systems, GPU Computing &amp; Applied AI Notes
+          </div>
+          <p class="disclaimer-note">
+            Personal technical notebook. Opinions, benchmarks, and engineering notes published here are strictly my own and do not represent the views or official positions of my employer.
+          </p>
+        </div>
+        <div class="nav-links">
+          <a href="https://github.com/sunbc0120" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/sunbc0120" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://stackoverflow.com/users/3317548" target="_blank" rel="noopener noreferrer">StackOverflow</a>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('theme-toggle-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          var current = document.documentElement.getAttribute('data-theme') || 'dark';
+          var next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try {
+            localStorage.setItem('sun-blog-theme', next);
+          } catch (e) {}
+          window.dispatchEvent(new CustomEvent('sun-theme-change', { detail: { theme: next } }));
+        });
+      })();
+    </script>
+  </body>
+</html>

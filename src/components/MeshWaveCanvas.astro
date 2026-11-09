@@ -1,0 +1,424 @@
+---
+/**
+ * Taut Honeycomb Hexagonal Mesh Canvas (Overdamped Graphene Lattice)
+ * - Exact degree-3 flat-top hexagonal (honeycomb) topology with deduplicated edges.
+ * - Overdamped elastic anchor + neighbor bond coupling: deflects subtly along the
+ *   cursor path like a solid wire/carbon net and relaxes tautly with zero liquid ripples.
+ * - Automatically sleeps at 0% CPU/GPU when settled and wakes on pointer movement.
+ */
+---
+
+<canvas id="mesh-wave-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #mesh-wave-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    display: block;
+  }
+</style>
+
+<script>
+  function initHexMesh() {
+    const canvas = document.getElementById('mesh-wave-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    // Honeycomb geometry & overdamped solid-mesh physics constants
+    const HEX_SIDE = 32;          // Hexagon edge length (px) -> ~64px wide honeycomb cells
+    const RADIUS = 92;            // Tight local cursor interaction radius (px)
+    const K_ANCHOR = 0.18;        // Strong anchor stiffness (taut solid net)
+    const K_BOND = 0.045;         // Elastic tension across the 3 incident hex bonds
+    const DAMPING = 0.58;         // Heavy overdamping (< 0.65 prevents secondary ripples)
+    const MAX_DISP = 5.5;         // Subtle max vertex deflection (px)
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    let nodeCount = 0;
+    let edgeCount = 0;
+    let restX = new Float32Array(0);
+    let restY = new Float32Array(0);
+    let dispX = new Float32Array(0);
+    let dispY = new Float32Array(0);
+    let velX = new Float32Array(0);
+    let velY = new Float32Array(0);
+    let strain = new Float32Array(0);
+
+    // Up to 3 neighbors per vertex in a honeycomb lattice (-1 if boundary)
+    let nbr0 = new Int32Array(0);
+    let nbr1 = new Int32Array(0);
+    let nbr2 = new Int32Array(0);
+
+    // Deduplicated undirected hex edges
+    let edgeU = new Int32Array(0);
+    let edgeV = new Int32Array(0);
+
+    const pointer = {
+      x: -9999,
+      y: -9999,
+      prevX: -9999,
+      prevY: -9999,
+      active: false,
+    };
+
+    function getPalette() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      return isDark
+        ? {
+            baseR: 148,
+            baseG: 163,
+            baseB: 184,
+            baseAlpha: 0.044,
+            activeR: 56,
+            activeG: 189,
+            activeB: 248,   // #38BDF8 sky-cyan
+            accentR: 52,
+            accentG: 211,
+            accentB: 153,   // #34D399 emerald
+            edgeAlphaMax: 0.17,
+            nodeAlphaMax: 0.24,
+          }
+        : {
+            baseR: 71,
+            baseG: 85,
+            baseB: 105,
+            baseAlpha: 0.038,
+            activeR: 15,
+            activeG: 76,
+            activeB: 129,   // #0F4C81 steel-navy
+            accentR: 5,
+            accentG: 150,
+            accentB: 105,   // #059669 emerald
+            edgeAlphaMax: 0.14,
+            nodeAlphaMax: 0.20,
+          };
+    }
+
+    let palette = getPalette();
+
+    function buildHoneycomb() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas!.width = Math.floor(width * dpr);
+      canvas!.height = Math.floor(height * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const sqrt3 = Math.sqrt(3);
+      const colStep = 1.5 * HEX_SIDE;
+      const rowStep = sqrt3 * HEX_SIDE;
+
+      const vertexMap = new Map<string, number>();
+      const rxList: number[] = [];
+      const ryList: number[] = [];
+      const edgeSet = new Set<string>();
+      const uList: number[] = [];
+      const vList: number[] = [];
+
+      const angles = [
+        0,
+        Math.PI / 3,
+        (2 * Math.PI) / 3,
+        Math.PI,
+        (4 * Math.PI) / 3,
+        (5 * Math.PI) / 3,
+      ];
+      const cosA = angles.map((a) => Math.cos(a) * HEX_SIDE);
+      const sinA = angles.map((a) => Math.sin(a) * HEX_SIDE);
+
+      const cols = Math.ceil(width / colStep) + 3;
+      const rows = Math.ceil(height / rowStep) + 3;
+
+      function getOrAddVertex(x: number, y: number): number {
+        const key = `${Math.round(x * 2)},${Math.round(y * 2)}`;
+        let idx = vertexMap.get(key);
+        if (idx === undefined) {
+          idx = rxList.length;
+          vertexMap.set(key, idx);
+          rxList.push(x);
+          ryList.push(y);
+        }
+        return idx;
+      }
+
+      for (let c = -1; c < cols; c++) {
+        const cx = c * colStep;
+        const yShift = (c & 1) !== 0 ? rowStep * 0.5 : 0;
+        for (let r = -1; r < rows; r++) {
+          const cy = r * rowStep + yShift;
+          const ring: number[] = [];
+          for (let k = 0; k < 6; k++) {
+            ring.push(getOrAddVertex(cx + cosA[k], cy + sinA[k]));
+          }
+          for (let k = 0; k < 6; k++) {
+            const a = ring[k];
+            const b = ring[(k + 1) % 6];
+            const lo = a < b ? a : b;
+            const hi = a < b ? b : a;
+            const eKey = `${lo}:${hi}`;
+            if (!edgeSet.has(eKey)) {
+              edgeSet.add(eKey);
+              uList.push(lo);
+              vList.push(hi);
+            }
+          }
+        }
+      }
+
+      nodeCount = rxList.length;
+      edgeCount = uList.length;
+
+      restX = Float32Array.from(rxList);
+      restY = Float32Array.from(ryList);
+      dispX = new Float32Array(nodeCount);
+      dispY = new Float32Array(nodeCount);
+      velX = new Float32Array(nodeCount);
+      velY = new Float32Array(nodeCount);
+      strain = new Float32Array(nodeCount);
+
+      nbr0 = new Int32Array(nodeCount).fill(-1);
+      nbr1 = new Int32Array(nodeCount).fill(-1);
+      nbr2 = new Int32Array(nodeCount).fill(-1);
+
+      edgeU = Int32Array.from(uList);
+      edgeV = Int32Array.from(vList);
+
+      function linkNeighbor(a: number, b: number) {
+        if (nbr0[a] === -1) nbr0[a] = b;
+        else if (nbr1[a] === -1) nbr1[a] = b;
+        else if (nbr2[a] === -1) nbr2[a] = b;
+      }
+
+      for (let e = 0; e < edgeCount; e++) {
+        const u = edgeU[e];
+        const v = edgeV[e];
+        linkNeighbor(u, v);
+        linkNeighbor(v, u);
+      }
+    }
+
+    function applyCursorTension(x0: number, y0: number, x1: number, y1: number) {
+      const segDx = x1 - x0;
+      const segDy = y1 - y0;
+      const dist = Math.hypot(segDx, segDy);
+      if (dist < 0.05) return;
+
+      const steps = Math.max(1, Math.min(8, Math.ceil(dist / 22)));
+      const rSqMax = RADIUS * RADIUS;
+      const dragX = Math.max(-3.2, Math.min(3.2, segDx * 0.055));
+      const dragY = Math.max(-3.2, Math.min(3.2, segDy * 0.055));
+
+      for (let s = 1; s <= steps; s++) {
+        const t = s / steps;
+        const px = x0 + segDx * t;
+        const py = y0 + segDy * t;
+        const minX = px - RADIUS;
+        const maxX = px + RADIUS;
+        const minY = py - RADIUS;
+        const maxY = py + RADIUS;
+
+        for (let i = 0; i < nodeCount; i++) {
+          const rx = restX[i];
+          if (rx < minX || rx > maxX) continue;
+          const ry = restY[i];
+          if (ry < minY || ry > maxY) continue;
+
+          const dx = rx - px;
+          const dy = ry - py;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < rSqMax) {
+            const d = Math.sqrt(dSq);
+            const falloff = 1 - d / RADIUS;
+            const w = (falloff * falloff) / steps;
+            const invD = d > 1 ? 1 / d : 0;
+
+            // Taut solid-net deflection: slight tangential pull + subtle radial tension
+            velX[i] += (dragX + dx * invD * 0.38) * w;
+            velY[i] += (dragY + dy * invD * 0.38) * w;
+          }
+        }
+      }
+    }
+
+    let rafId = 0;
+    let awake = false;
+
+    function renderStaticOrActive() {
+      ctx!.clearRect(0, 0, width, height);
+
+      // 1. Single batched draw for the entire honeycomb wireframe
+      ctx!.lineWidth = 0.9;
+      ctx!.strokeStyle = `rgba(${palette.baseR}, ${palette.baseG}, ${palette.baseB}, ${palette.baseAlpha})`;
+      ctx!.beginPath();
+      for (let e = 0; e < edgeCount; e++) {
+        const u = edgeU[e];
+        const v = edgeV[e];
+        ctx!.moveTo(restX[u] + dispX[u], restY[u] + dispY[u]);
+        ctx!.lineTo(restX[v] + dispX[v], restY[v] + dispY[v]);
+      }
+      ctx!.stroke();
+
+      // 2. Subtle local tension highlight only on actively strained hex bonds
+      for (let e = 0; e < edgeCount; e++) {
+        const u = edgeU[e];
+        const v = edgeV[e];
+        const s = (strain[u] + strain[v]) * 0.5;
+        if (s < 0.04) continue;
+
+        const mix = Math.min(1, s);
+        const cr = Math.round(palette.activeR + (palette.accentR - palette.activeR) * mix * 0.5);
+        const cg = Math.round(palette.activeG + (palette.accentG - palette.activeG) * mix * 0.5);
+        const cb = Math.round(palette.activeB + (palette.accentB - palette.activeB) * mix * 0.5);
+        const alpha = (mix * palette.edgeAlphaMax).toFixed(3);
+
+        ctx!.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, ${alpha})`;
+        ctx!.lineWidth = 1.05;
+        ctx!.beginPath();
+        ctx!.moveTo(restX[u] + dispX[u], restY[u] + dispY[u]);
+        ctx!.lineTo(restX[v] + dispX[v], restY[v] + dispY[v]);
+        ctx!.stroke();
+      }
+
+      for (let i = 0; i < nodeCount; i++) {
+        const s = strain[i];
+        if (s < 0.08) continue;
+        const alpha = (Math.min(1, s) * palette.nodeAlphaMax).toFixed(3);
+        ctx!.fillStyle = `rgba(${palette.activeR}, ${palette.activeG}, ${palette.activeB}, ${alpha})`;
+        ctx!.beginPath();
+        ctx!.arc(restX[i] + dispX[i], restY[i] + dispY[i], 1.15, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+    }
+
+    function step() {
+      let maxMotion = 0;
+
+      // Overdamped elastic relaxation across anchor + 3 hex neighbors (no wave oscillation)
+      for (let i = 0; i < nodeCount; i++) {
+        const ux = dispX[i];
+        const uy = dispY[i];
+
+        let bondFx = 0;
+        let bondFy = 0;
+        const n0 = nbr0[i];
+        if (n0 !== -1) {
+          bondFx += dispX[n0] - ux;
+          bondFy += dispY[n0] - uy;
+        }
+        const n1 = nbr1[i];
+        if (n1 !== -1) {
+          bondFx += dispX[n1] - ux;
+          bondFy += dispY[n1] - uy;
+        }
+        const n2 = nbr2[i];
+        if (n2 !== -1) {
+          bondFx += dispX[n2] - ux;
+          bondFy += dispY[n2] - uy;
+        }
+
+        const vx = (velX[i] - ux * K_ANCHOR + bondFx * K_BOND) * DAMPING;
+        const vy = (velY[i] - uy * K_ANCHOR + bondFy * K_BOND) * DAMPING;
+        velX[i] = vx;
+        velY[i] = vy;
+
+        let nx = ux + vx;
+        let ny = uy + vy;
+        const mag = Math.hypot(nx, ny);
+        if (mag > MAX_DISP) {
+          const scale = MAX_DISP / mag;
+          nx *= scale;
+          ny *= scale;
+        }
+        dispX[i] = nx;
+        dispY[i] = ny;
+
+        const m = Math.min(mag, MAX_DISP);
+        strain[i] = m / MAX_DISP;
+        const activity = m + Math.hypot(vx, vy);
+        if (activity > maxMotion) maxMotion = activity;
+      }
+
+      renderStaticOrActive();
+
+      if (maxMotion > 0.015) {
+        rafId = requestAnimationFrame(step);
+      } else {
+        // Snap cleanly to exact rest lattice and sleep at 0% CPU until next pointer move
+        dispX.fill(0);
+        dispY.fill(0);
+        velX.fill(0);
+        velY.fill(0);
+        strain.fill(0);
+        renderStaticOrActive();
+        awake = false;
+      }
+    }
+
+    function wake() {
+      if (!awake && !document.hidden) {
+        awake = true;
+        rafId = requestAnimationFrame(step);
+      }
+    }
+
+    new MutationObserver(() => {
+      palette = getPalette();
+      renderStaticOrActive();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    window.addEventListener(
+      'resize',
+      () => {
+        buildHoneycomb();
+        renderStaticOrActive();
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        if (!pointer.active) {
+          pointer.prevX = e.clientX;
+          pointer.prevY = e.clientY;
+          pointer.x = e.clientX;
+          pointer.y = e.clientY;
+          pointer.active = true;
+          return;
+        }
+        pointer.prevX = pointer.x;
+        pointer.prevY = pointer.y;
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+        applyCursorTension(pointer.prevX, pointer.prevY, pointer.x, pointer.y);
+        wake();
+      },
+      { passive: true }
+    );
+
+    document.addEventListener('pointerleave', () => {
+      pointer.active = false;
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && awake) {
+        cancelAnimationFrame(rafId);
+        awake = false;
+      }
+    });
+
+    buildHoneycomb();
+    renderStaticOrActive();
+  }
+
+  initHexMesh();
+</script>
